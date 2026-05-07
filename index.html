@@ -4,91 +4,54 @@
     <title>محاكي اختبار النمر</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { 
-            --primary-color: #008080; 
-            --bg-sidebar: #e9eff5;
-            --white: #ffffff;
-            --btn-prev: #eeeeee;
-        }
-
+        :root { --primary-color: #008080; --bg-sidebar: #e9eff5; --white: #ffffff; --btn-prev: #eeeeee; }
         body { font-family: Arial, sans-serif; background-color: #f7f9fb; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-
-        header { 
-            background-color: var(--primary-color); 
-            color: white; 
-            padding: 10px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            font-size: 13px;
-            flex-wrap: wrap; /* للسماح بالنزول لسطر جديد في الموبايل */
-            gap: 5px;
-        }
-
+        header { background-color: var(--primary-color); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 5px; }
         .main-container { display: flex; flex: 1; overflow: hidden; }
-
-        .sidebar { 
-            width: 220px; 
-            background-color: var(--bg-sidebar); 
-            border-left: 1px solid #d1d9e0; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px;
-            overflow-y: auto;
-        }
-
+        .sidebar { width: 220px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
         .timer-section { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 10px; text-align: center; }
         .timer-value { font-size: 22px; font-weight: bold; }
-
         .info-box { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 8px; text-align: center; font-size: 12px; }
-
         .questions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .q-num { 
-            width: 100%; height: 35px; background: white; border: 1px solid #ccd6dd; 
-            display: flex; justify-content: center; align-items: center; 
-            cursor: pointer; font-size: 12px; font-weight: bold;
-        }
+        .q-num { width: 100%; height: 35px; background: white; border: 1px solid #ccd6dd; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; }
         .q-num.active { border: 2px solid orange; }
         .q-num.answered { background-color: #00a651; color: white; border: none; }
-
         .content { flex: 1; padding: 15px; background: white; display: flex; flex-direction: column; overflow-y: auto; }
-        
         .font-controls { display: flex; gap: 5px; margin-bottom: 15px; }
         .font-btn { background-color: #00bcd4; color: white; border: none; padding: 5px 12px; border-radius: 3px; cursor: pointer; }
-
-        .question-area { flex: 1; min-height: 200px; }
-        .option { 
-            padding: 12px; border: 1px solid #eee; border-radius: 8px; 
-            cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; 
-            font-size: 15px; transition: 0.2s;
-        }
+        .option { padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; font-size: 15px; transition: 0.2s; }
         .option.selected { border: 2px solid var(--primary-color); background-color: #e6f2f2; }
-
         .footer-controls { border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
         .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
         .btn-save { background-color: var(--primary-color); color: white; }
         .btn-prev { background-color: var(--btn-prev); color: #666; }
-
         footer { background-color: var(--primary-color); color: white; text-align: center; padding: 10px; font-weight: bold; }
 
-        /* تعديلات الموبايل (Media Queries) */
+        /* شاشة إدخال الاسم */
+        #name-screen { position: fixed; inset: 0; background: white; z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center; }
+        #name-input { padding: 15px; width: 280px; font-size: 18px; border: 2px solid var(--primary-color); border-radius: 8px; margin-bottom: 15px; text-align: center; outline: none; }
+
         @media (max-width: 768px) {
             header { flex-direction: column; text-align: center; font-size: 12px; }
             .main-container { flex-direction: column-reverse; overflow-y: auto; }
             .sidebar { width: auto; border-left: none; border-bottom: 1px solid #ddd; height: auto; padding: 15px; }
-            .questions-grid { grid-template-columns: repeat(8, 1fr); } /* عرض مربعات أكثر في الصف الواحد للموبايل */
+            .questions-grid { grid-template-columns: repeat(8, 1fr); }
             .content { height: auto; overflow: visible; }
-            .timer-section { display: inline-block; width: 45%; margin-left: 5%; }
-            .info-box { display: inline-block; width: 45%; }
         }
     </style>
 </head>
 <body>
 
+<div id="name-screen">
+    <h2 style="color: var(--primary-color);">مرحباً بك في محاكي اختبار النمر</h2>
+    <p>يرجى إدخال اسمك الثلاثي للبدء:</p>
+    <input type="text" id="name-input" placeholder="اكتب اسمك هنا...">
+    <button class="btn btn-save" onclick="startQuiz()">بدء الاختبار الآن</button>
+</div>
+
 <header>
     <div>الأسئلة المرحلة : 0</div>
-    <div></div>
+    <div>عنوان الاختبار : 148 . الصفدي ووصف الجندي</div>
     <div>مجموع الأسئلة : 15</div>
 </header>
 
@@ -101,8 +64,8 @@
         </div>
 
         <div id="quiz-ui">
-            <div class="question-area" id="q-area">
-                <div id="q-text" style="font-weight: bold; margin-bottom: 20px;">جاري تحميل السؤال...</div>
+            <div class="question-area" id="q-area" style="min-height: 200px;">
+                <div id="q-text" style="font-weight: bold; margin-bottom: 20px; font-size: 1.2em;">جاري تحميل السؤال...</div>
                 <div id="options-container"></div>
             </div>
             
@@ -132,6 +95,7 @@
     const TEMPLATE_ID = "template_8o5hc72"; 
     emailjs.init(PUBLIC_KEY);
 
+    let userName = "";
     const prefixes = ["أ", "ب", "ج", "د"];
     const questions = [
         { q: "زفير : شهيق", options: ["غطس : طفو", "طرق : سيارة", "قراءة : كتابة", "حليب : لبن"], correct: 0 },
@@ -154,7 +118,20 @@
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
     let timeLeft = 900;
+    let timerInterval;
     let currentFontSize = 18;
+
+    function startQuiz() {
+        const input = document.getElementById('name-input');
+        if (input.value.trim().length < 3) {
+            alert("يرجى إدخال اسمك بالكامل للمتابعة.");
+            return;
+        }
+        userName = input.value.trim();
+        document.getElementById('name-screen').style.display = 'none';
+        renderQuestion();
+        startTimer();
+    }
 
     function renderQuestion() {
         const q = questions[currentIdx];
@@ -196,7 +173,7 @@
 
     function finishQuiz() {
         clearInterval(timerInterval);
-        document.getElementById('main-content').innerHTML = "<h3>جاري تسليم إجاباتك...</h3>";
+        document.getElementById('main-content').innerHTML = "<h3>جاري تسليم إجاباتك يا " + userName + "...</h3>";
         let correctCount = 0;
         let details = "";
         questions.forEach((q, i) => {
@@ -204,26 +181,38 @@
             if (isCorrect) correctCount++;
             details += `س${i+1}: (${prefixes[userAnswers[i]] || 'X'}) | الصح (${prefixes[q.correct]}) | ${isCorrect ? '✔' : '✘'}\n`;
         });
-        emailjs.send(SERVICE_ID, TEMPLATE_ID, { user_score: Math.round((correctCount/15)*100) + "%", user_details: details })
+        
+        // تعديل البيانات المرسلة لتشمل الاسم
+        const emailParams = {
+            user_name: userName, // تأكد أن قالب EmailJS يحتوي على {{user_name}}
+            user_score: Math.round((correctCount/15)*100) + "%",
+            user_details: details
+        };
+
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, emailParams)
             .then(() => {
                 document.getElementById('sidebar').style.display = 'none';
-                document.getElementById('main-content').innerHTML = "<div style='text-align:center;'><h1>تم التسليم</h1></div>";
+                document.getElementById('main-content').innerHTML = `
+                    <div style='text-align:center; padding-top:50px;'>
+                        <h1 style='color:var(--primary-color)'>تم التسليم بنجاح</h1>
+                        <p>شكراً لك يا <b>${userName}</b>، تم إرسال نتيجتك للمشرف.</p>
+                    </div>`;
             });
     }
 
     function nextQuestion() {
         if (currentIdx < 14) { currentIdx++; renderQuestion(); }
-        else { if(confirm("هل تريد التسليم؟")) finishQuiz(); }
+        else { if(confirm("هل تريد تسليم الاختبار النهائي؟")) finishQuiz(); }
     }
 
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
 
-    const timerInterval = setInterval(() => {
-        let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
-        document.getElementById('timer-box').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-        if(timeLeft-- <= 0) finishQuiz();
-    }, 1000);
-
-    renderQuestion();
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
+            document.getElementById('timer-box').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            if(timeLeft-- <= 0) finishQuiz();
+        }, 1000);
+    }
 </script>
 </body></html>
