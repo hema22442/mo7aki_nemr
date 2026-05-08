@@ -15,7 +15,7 @@
             --correct-green: #2ecc71;
         }
         
-        /* العلامة المائية المحدثة بالرابط الجديد */
+        /* زيادة تباين العلامة المائية في الخلفية */
         body::before {
             content: "";
             position: fixed;
@@ -23,8 +23,8 @@
             background-image: url('https://i.ibb.co/cKT1jthn/ca599475-eca2-4305-bd6e-685d46472e03.jpg');
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 400px;
-            opacity: 0.06; /* تم زيادة الوضوح قليلاً لتناسب الرابط الجديد */
+            background-size: 450px;
+            opacity: 0.12; /* تم زيادة التباين هنا لظهور أقوى */
             z-index: -1;
             pointer-events: none;
         }
@@ -97,18 +97,8 @@
         }
         .q-num.active { border: 2px solid #f39c12; background: #fffdf0; color: #f39c12; }
         .q-num.answered { background-color: var(--correct-green); color: white; border: none; }
-        .q-num:hover { transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        .font-controls-box { background: #fff; border-radius: 8px; padding: 12px; border: 1px solid #ddd; }
-        .font-btns-wrapper { display: flex; gap: 8px; }
-        .font-btn { 
-            background-color: var(--accent-color); 
-            color: white; border: none; 
-            padding: 8px; border-radius: 5px; 
-            cursor: pointer; flex: 1; font-weight: bold;
-        }
-
-        .content { flex: 1; padding: 30px; background: rgba(255, 255, 255, 0.85); overflow-y: auto; }
+        .content { flex: 1; padding: 30px; background: rgba(255, 255, 255, 0.88); overflow-y: auto; }
         .question-card {
             background: white;
             padding: 25px;
@@ -118,9 +108,6 @@
             margin: 0 auto;
         }
 
-        .question-area { margin-bottom: 25px; }
-        #q-text { color: #2c3e50; line-height: 1.5; }
-        
         .option { 
             padding: 15px 20px; 
             border: 1px solid #dee2e6; 
@@ -129,36 +116,40 @@
             margin-bottom: 12px; 
             display: flex; 
             align-items: center; 
-            transition: all 0.2s ease;
             background: white;
         }
-        .option:hover { background-color: #f8f9fa; border-color: var(--primary-color); }
         .option.selected { 
             border: 2px solid var(--primary-color); 
             background-color: #f0fafa; 
-            font-weight: bold;
         }
-        .prefix {
-            background: var(--primary-color);
-            color: white;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-left: 15px;
-            font-size: 14px;
+
+        /* إصلاح شاشة الاسم لضمان ظهور المربع والزر */
+        #name-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: #ffffff; 
+            z-index: 2000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            flex-direction: column; 
+            padding: 20px;
         }
         
-        .footer-controls { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 30px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+        #name-input { 
+            padding: 15px; 
+            width: 100%; 
+            max-width: 320px; 
+            font-size: 18px; 
+            border: 2px solid #008080; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            outline: none;
+            position: relative;
+            z-index: 2001;
         }
+
         .btn { 
             padding: 12px 30px; 
             border-radius: 8px; 
@@ -166,40 +157,28 @@
             cursor: pointer; 
             font-weight: bold; 
             font-size: 16px;
-            transition: 0.3s;
         }
-        .btn-prev { background: #e0e0e0; color: #555; }
         .btn-save { background-color: var(--primary-color); color: white; }
-        .btn:hover { opacity: 0.9; transform: scale(1.02); }
 
         footer { background-color: #222; color: #bbb; text-align: center; padding: 10px; font-size: 12px; }
-
-        #name-screen { 
-            position: fixed; inset: 0; background: #fff; z-index: 1000; 
-            display: flex; justify-content: center; align-items: center; flex-direction: column; 
-        }
-        #name-input { 
-            padding: 15px; width: 320px; font-size: 18px; border: 2px solid #ddd; 
-            border-radius: 10px; margin-bottom: 20px; text-align: center; outline: none;
-        }
-        #name-input:focus { border-color: var(--primary-color); }
 
         @media (max-width: 768px) {
             .main-container { flex-direction: column-reverse; }
             .sidebar { width: auto; border-left: none; border-top: 2px solid #ddd; }
-            .questions-grid { grid-template-columns: repeat(5, 1fr); }
-            .content { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
 <div id="name-screen">
-    <img src="https://i.ibb.co/cKT1jthn/ca599475-eca2-4305-bd6e-685d46472e03.jpg" alt="Logo" style="width: 180px; margin-bottom: 20px; border-radius: 10px;">
-    <h2 style="color: var(--primary-color);">نظام محاكاة اختبار النمر</h2>
-    <p style="color: #666;">أدخل اسمك الثلاثي لبدء الجلسة الاختيارية</p>
-    <input type="text" id="name-input" placeholder="اسم الطالب">
-    <button class="btn btn-save" style="width: 320px;" onclick="startQuiz()">ابدأ الاختبار الآن</button>
+    <img src="https://i.ibb.co/cKT1jthn/ca599475-eca2-4305-bd6e-685d46472e03.jpg" alt="Logo" style="width: 150px; height: auto; margin-bottom: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    
+    <h2 style="color: var(--primary-color); margin-bottom: 10px;">نظام محاكاة اختبار النمر</h2>
+    <p style="color: #666; margin-bottom: 25px;">أدخل اسمك الثلاثي لبدء الجلسة</p>
+    
+    <input type="text" id="name-input" placeholder="اكتب اسمك هنا...">
+    
+    <button class="btn btn-save" style="width: 100%; max-width: 320px;" onclick="startQuiz()">ابدأ الاختبار الآن</button>
 </div>
 
 <header>
@@ -215,8 +194,8 @@
                 <div id="q-text" style="font-weight: bold; margin-bottom: 25px; font-size: 1.3em;">جاري التحميل...</div>
                 <div id="options-container"></div>
             </div>
-            <div class="footer-controls">
-                <button class="btn btn-prev" onclick="prevQuestion()">السابق</button>
+            <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                <button class="btn" style="background: #e0e0e0;" onclick="prevQuestion()">السابق</button>
                 <button class="btn btn-save" onclick="nextQuestion()">حفظ والتالي</button>
             </div>
         </div>
@@ -224,24 +203,11 @@
 
     <div class="sidebar" id="sidebar">
         <div class="timer-section">
-            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">الوقت المتبقي</div>
+            <div style="font-size: 12px; color: #666;">الوقت المتبقي</div>
             <div class="timer-value" id="timer-box">15:00</div>
         </div>
-
-        <div class="info-box">
-             خريطة الأسئلة
-        </div>
-        
+        <div class="info-box">خريطة الأسئلة</div>
         <div class="questions-grid" id="q-grid"></div>
-
-        <div class="font-controls-box">
-            <div style="font-size: 12px; margin-bottom: 8px; text-align: center;">حجم الخط</div>
-            <div class="font-btns-wrapper">
-                <button class="font-btn" onclick="changeFontSize(2)">A+</button>
-                <button class="font-btn" onclick="changeFontSize(0)">A</button>
-                <button class="font-btn" onclick="changeFontSize(-2)">A-</button>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -276,7 +242,6 @@
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
     let timerInterval;
-    let currentFontSize = 20;
 
     function startQuiz() {
         const input = document.getElementById('name-input');
@@ -315,12 +280,8 @@
         q.options.forEach((opt, i) => {
             const div = document.createElement('div');
             div.className = `option ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
-            div.innerHTML = `<span class="prefix">${prefixes[i]}</span> <span>${opt}</span>`;
-            div.onclick = () => { 
-                userAnswers[currentIdx] = i; 
-                renderQuestion(); 
-                updateStats(); 
-            };
+            div.innerHTML = `<span style="background:var(--primary-color); color:white; width:25px; height:25px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; margin-left:10px;">${prefixes[i]}</span> <span>${opt}</span>`;
+            div.onclick = () => { userAnswers[currentIdx] = i; renderQuestion(); updateStats(); };
             container.appendChild(div);
         });
         updateGrid();
@@ -341,12 +302,6 @@
     function updateStats() {
         const count = userAnswers.filter(a => a !== null).length;
         document.getElementById('top-answered').innerText = `الأسئلة المجابة: ${count} / 15`;
-    }
-
-    function changeFontSize(val) {
-        if (val === 0) currentFontSize = 20;
-        else currentFontSize += val;
-        document.getElementById('q-area').style.fontSize = currentFontSize + "px";
     }
 
     function nextQuestion() {
@@ -378,7 +333,6 @@
                 <div class='question-card' style='text-align:center;'>
                     <h2 style='color:var(--primary-color)'>تم التسليم بنجاح!</h2>
                     <p>شكراً لك يا ${userName}، تم إرسال نتيجتك للمعلم.</p>
-                    <div style='font-size:40px; margin:20px;'>🏁</div>
                 </div>`;
         });
     }
