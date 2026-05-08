@@ -1,129 +1,261 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاكي اختبار النمر</title>
+    <title>محاكي اختبار النمر - المطور</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root { --primary-color: #008080; --bg-sidebar: #e9eff5; --white: #ffffff; --btn-prev: #eeeeee; }
+        :root { 
+            --primary-color: #008080; 
+            --accent-color: #00bcd4;
+            --bg-sidebar: #f0f4f8; 
+            --white: #ffffff; 
+            --text-dark: #333;
+            --correct-green: #2ecc71;
+        }
         
-        /* العلامة المائية */
+        /* العلامة المائية المحسنة */
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('https://i.ibb.co/wFJt0pqx/BCO-6180dd9d-ab1d-48e6-a41a-bf541b720868.png');
-            background-repeat: repeat;
+            background-repeat: no-repeat;
             background-position: center;
-            background-size: 300px;
-            opacity: 0.06;
+            background-size: 400px;
+            opacity: 0.04;
             z-index: -1;
             pointer-events: none;
         }
 
-        body { font-family: Arial, sans-serif; background-color: #f7f9fb; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background-color: var(--primary-color); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; z-index: 10; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f7f9fb; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            color: var(--text-dark);
+        }
+
+        header { 
+            background-color: var(--primary-color); 
+            color: white; 
+            padding: 12px 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10; 
+        }
+
         .main-container { display: flex; flex: 1; overflow: hidden; }
         
-        /* السايد بار */
-        .sidebar { width: 240px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        /* السايد بار - تصميم عصري */
+        .sidebar { 
+            width: 260px; 
+            background-color: var(--bg-sidebar); 
+            border-left: 1px solid #d1d9e0; 
+            padding: 20px 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            overflow-y: auto; 
+        }
         
-        .timer-section { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 15px; text-align: center; }
-        .timer-value { font-size: 26px; font-weight: bold; color: #333; }
+        .timer-section { 
+            background: var(--white); 
+            border: 2px solid var(--primary-color); 
+            border-radius: 10px; 
+            padding: 15px; 
+            text-align: center; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .timer-value { font-size: 28px; font-weight: bold; color: #e74c3c; font-family: monospace; }
 
-        .info-box { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 8px; text-align: center; font-size: 12px; }
+        .info-box { 
+            background: var(--white); 
+            border-radius: 8px; 
+            padding: 10px; 
+            text-align: center; 
+            font-size: 14px; 
+            border: 1px solid #ddd;
+        }
         
         /* شبكة الأسئلة */
-        .questions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .q-num { width: 100%; height: 35px; background: white; border: 1px solid #ccd6dd; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .q-num.active { border: 2px solid orange; }
-        .q-num.answered { background-color: #00a651; color: white; border: none; }
+        .questions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .q-num { 
+            height: 40px; 
+            background: white; 
+            border: 1px solid #ccd6dd; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .q-num.active { border: 2px solid #f39c12; background: #fffdf0; color: #f39c12; }
+        .q-num.answered { background-color: var(--correct-green); color: white; border: none; }
+        .q-num:hover { transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        /* قسم أزرار الخط - تم نقله أسفل الأرقام */
-        .font-controls-box { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 10px; margin-top: auto; }
-        .font-label { font-size: 12px; text-align: center; margin-bottom: 8px; color: #666; font-weight: bold; }
-        .font-btns-wrapper { display: flex; gap: 5px; justify-content: center; }
-        .font-btn { background-color: #00bcd4; color: white; border: none; padding: 6px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold; flex: 1; }
-        .font-btn:hover { background-color: #0097a7; }
+        /* التحكم بالخط */
+        .font-controls-box { background: #fff; border-radius: 8px; padding: 12px; border: 1px solid #ddd; }
+        .font-btns-wrapper { display: flex; gap: 8px; }
+        .font-btn { 
+            background-color: var(--accent-color); 
+            color: white; border: none; 
+            padding: 8px; border-radius: 5px; 
+            cursor: pointer; flex: 1; font-weight: bold;
+        }
 
-        .content { flex: 1; padding: 15px; background: rgba(255, 255, 255, 0.7); display: flex; flex-direction: column; overflow-y: auto; }
-        .question-area { font-size: 18px; line-height: 1.6; }
+        /* منطقة السؤال */
+        .content { flex: 1; padding: 30px; background: rgba(255, 255, 255, 0.85); overflow-y: auto; }
+        .question-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question-area { margin-bottom: 25px; }
+        #q-text { color: #2c3e50; line-height: 1.5; }
         
-        .option { padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; font-size: 16px; transition: 0.2s; background: rgba(255, 255, 255, 0.9); }
-        .option.selected { border: 2px solid var(--primary-color); background-color: #e6f2f2; }
+        /* الخيارات */
+        .option { 
+            padding: 15px 20px; 
+            border: 1px solid #dee2e6; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            transition: all 0.2s ease;
+            background: white;
+        }
+        .option:hover { background-color: #f8f9fa; border-color: var(--primary-color); }
+        .option.selected { 
+            border: 2px solid var(--primary-color); 
+            background-color: #f0fafa; 
+            font-weight: bold;
+        }
+        .prefix {
+            background: var(--primary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-left: 15px;
+            font-size: 14px;
+        }
         
-        .footer-controls { border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-        .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
+        /* أزرار التحكم */
+        .footer-controls { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn { 
+            padding: 12px 30px; 
+            border-radius: 8px; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .btn-prev { background: #e0e0e0; color: #555; }
         .btn-save { background-color: var(--primary-color); color: white; }
-        footer { background-color: var(--primary-color); color: white; text-align: center; padding: 10px; font-weight: bold; }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
 
-        #name-screen { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
-        #name-input { padding: 15px; width: 280px; font-size: 18px; border: 2px solid var(--primary-color); border-radius: 8px; margin-bottom: 15px; text-align: center; }
+        footer { background-color: #222; color: #bbb; text-align: center; padding: 10px; font-size: 12px; }
+
+        /* شاشة الاسم */
+        #name-screen { 
+            position: fixed; inset: 0; background: #fff; z-index: 1000; 
+            display: flex; justify-content: center; align-items: center; flex-direction: column; 
+        }
+        #name-input { 
+            padding: 15px; width: 320px; font-size: 18px; border: 2px solid #ddd; 
+            border-radius: 10px; margin-bottom: 20px; text-align: center; outline: none;
+        }
+        #name-input:focus { border-color: var(--primary-color); }
 
         @media (max-width: 768px) {
-            header { flex-direction: column; font-size: 12px; }
             .main-container { flex-direction: column-reverse; }
-            .sidebar { width: auto; height: auto; border-left: none; border-top: 1px solid #ddd; }
-            .questions-grid { grid-template-columns: repeat(8, 1fr); }
-            .font-controls-box { margin-top: 10px; }
+            .sidebar { width: auto; border-left: none; border-top: 2px solid #ddd; }
+            .questions-grid { grid-template-columns: repeat(5, 1fr); }
+            .content { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
 <div id="name-screen">
-    <img src="https://i.ibb.co/wFJt0pqx/BCO-6180dd9d-ab1d-48e6-a41a-bf541b720868.png" alt="Logo" style="width: 150px; margin-bottom: 20px;">
-    <h2 style="color: var(--primary-color);">مرحباً بك في محاكي اختبار النمر</h2>
-    <p>يرجى إدخال اسمك الثلاثي للبدء:</p>
-    <input type="text" id="name-input" placeholder="اكتب اسمك هنا...">
-    <button class="btn btn-save" onclick="startQuiz()">بدء الاختبار الآن</button>
+    <img src="https://i.ibb.co/wFJt0pqx/BCO-6180dd9d-ab1d-48e6-a41a-bf541b720868.png" alt="Logo" style="width: 180px; margin-bottom: 20px;">
+    <h2 style="color: var(--primary-color);">نظام محاكاة اختبار النمر</h2>
+    <p style="color: #666;">أدخل اسمك الثلاثي لبدء الجلسة الاختيارية</p>
+    <input type="text" id="name-input" placeholder="اسم الطالب">
+    <button class="btn btn-save" style="width: 320px;" onclick="startQuiz()">ابدأ الاختبار الآن</button>
 </div>
 
 <header>
-    <div>الأسئلة المرحلة : 0</div>
-    <div>عنوان الاختبار : 148 . الصفدي ووصف الجندي</div>
-    <div>مجموع الأسئلة : 15</div>
+    <div id="top-answered">الأسئلة المجابة: 0 / 15</div>
+    <div style="font-weight: bold; font-size: 16px;">محاكي اختبار القدرات</div>
+    <div id="user-display">مرحباً بك</div>
 </header>
 
 <div class="main-container">
     <div class="content" id="main-content">
-        <div id="quiz-ui">
-            <div class="question-area" id="q-area" style="min-height: 200px;">
-                <div id="q-text" style="font-weight: bold; margin-bottom: 20px; font-size: 1.2em;">جاري تحميل السؤال...</div>
+        <div class="question-card" id="quiz-ui">
+            <div class="question-area" id="q-area">
+                <div id="q-text" style="font-weight: bold; margin-bottom: 25px; font-size: 1.3em;">جاري التحميل...</div>
                 <div id="options-container"></div>
             </div>
             <div class="footer-controls">
-                <button class="btn" style="background:#eee;" onclick="prevQuestion()">السابق</button>
-                <button class="btn btn-save" onclick="nextQuestion()">حفظ و التالي</button>
+                <button class="btn btn-prev" onclick="prevQuestion()">السابق</button>
+                <button class="btn btn-save" onclick="nextQuestion()">حفظ والتالي</button>
             </div>
         </div>
     </div>
 
     <div class="sidebar" id="sidebar">
         <div class="timer-section">
+            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">الوقت المتبقي</div>
             <div class="timer-value" id="timer-box">15:00</div>
         </div>
 
-        <div class="info-box">تم الإجابة <span id="answered-count" style="color: green; font-weight: bold;">0</span> / 15</div>
+        <div class="info-box">
+             خريطة الأسئلة
+        </div>
         
         <div class="questions-grid" id="q-grid"></div>
 
         <div class="font-controls-box">
-            <div class="font-label">تحكم في حجم الخط</div>
+            <div style="font-size: 12px; margin-bottom: 8px; text-align: center;">حجم الخط</div>
             <div class="font-btns-wrapper">
-                <button class="font-btn" onclick="changeFontSize(2)">+A</button>
+                <button class="font-btn" onclick="changeFontSize(2)">A+</button>
                 <button class="font-btn" onclick="changeFontSize(0)">A</button>
-                <button class="font-btn" onclick="changeFontSize(-2)">-A</button>
+                <button class="font-btn" onclick="changeFontSize(-2)">A-</button>
             </div>
         </div>
     </div>
 </div>
 
-<footer>محاكي اختبار النمر</footer>
+<footer>حقوق الطبع محفوظة &copy; 2024 محاكي اختبار النمر</footer>
 
 <script>
+    // الإعدادات الأساسية لـ EmailJS (زي ما هي في كودك)
     const PUBLIC_KEY = "cQYqz70Te8w8308k-"; 
     const SERVICE_ID = "service_alszjvq"; 
     const TEMPLATE_ID = "template_8o5hc72"; 
@@ -133,7 +265,7 @@
     const prefixes = ["أ", "ب", "ج", "د"];
     const questions = [
         { q: "زفير : شهيق", options: ["غطس : طفو", "طرق : سيارة", "قراءة : كتابة", "حليب : لبن"], correct: 0 },
-        { q: "رف : دولاب", options: ["جبهة : رأس", "رمش : حاجب", "كتاب : مطبعة", "كهرباء : مولد"], correct: 0 },
+        { q: "رف : دولاب", options: ["جبهة : رأس", "رمش : حاجب", "كتاب : mtb3a", "كهرباء : مولد"], correct: 0 },
         { q: "جمر : رماد", options: ["إنسان : موت", "شمس : غروب", "شيخ : طفل", "عجين : خبز"], correct: 0 },
         { q: "نواة : خلية", options: ["ذهب : ميزان", "درج : خزانه", "جذر : تربة", "حقيبة : قلم"], correct: 1 },
         { q: "إن خروج الإنسان من دائرة ........ الضيقة في إيثار نفسه إلى دائرة أعم وأشمل في محبة الآخرين لهو ........ خلقي كريم", options: ["اهتماماته - انحياز", "أنانيته - ارتقاء", "محيطه - تواضع", "مجتمعه - نمط"], correct: 1 },
@@ -152,37 +284,17 @@
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
     let timerInterval;
-    let currentFontSize = 18;
-
-    window.onload = function() {
-        const savedName = localStorage.getItem('tiger_userName');
-        const savedEndTime = localStorage.getItem('tiger_endTime');
-        const savedAnswers = localStorage.getItem('tiger_answers');
-
-        if (savedName && savedEndTime) {
-            const now = Date.now();
-            if (now < savedEndTime) {
-                userName = savedName;
-                userAnswers = JSON.parse(savedAnswers);
-                document.getElementById('name-screen').style.display = 'none';
-                renderQuestion();
-                updateStats();
-                startTimer(savedEndTime);
-            }
-        }
-    };
+    let currentFontSize = 20;
 
     function startQuiz() {
         const input = document.getElementById('name-input');
         if (input.value.trim().length < 3) {
-            alert("يرجى إدخال الاسم بالكامل.");
+            alert("يرجى إدخال اسمك الثلاثي بشكل صحيح.");
             return;
         }
         userName = input.value.trim();
+        document.getElementById('user-display').innerText = userName;
         const endTime = Date.now() + (15 * 60 * 1000);
-        localStorage.setItem('tiger_userName', userName);
-        localStorage.setItem('tiger_endTime', endTime);
-        localStorage.setItem('tiger_answers', JSON.stringify(userAnswers));
         document.getElementById('name-screen').style.display = 'none';
         renderQuestion();
         startTimer(endTime);
@@ -190,8 +302,7 @@
 
     function startTimer(endTime) {
         timerInterval = setInterval(() => {
-            const now = Date.now();
-            const distance = endTime - now;
+            const distance = endTime - Date.now();
             if (distance <= 0) {
                 clearInterval(timerInterval);
                 finishQuiz();
@@ -205,16 +316,16 @@
 
     function renderQuestion() {
         const q = questions[currentIdx];
-        document.getElementById('q-text').innerText = q.q;
+        document.getElementById('q-text').innerText = `السؤال ${currentIdx + 1}: ${q.q}`;
         const container = document.getElementById('options-container');
         container.innerHTML = '';
+        
         q.options.forEach((opt, i) => {
             const div = document.createElement('div');
             div.className = `option ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
-            div.innerHTML = `<span style='margin-left:8px; font-weight:bold;'>${prefixes[i]}.</span> ${opt}`;
+            div.innerHTML = `<span class="prefix">${prefixes[i]}</span> <span>${opt}</span>`;
             div.onclick = () => { 
                 userAnswers[currentIdx] = i; 
-                localStorage.setItem('tiger_answers', JSON.stringify(userAnswers));
                 renderQuestion(); 
                 updateStats(); 
             };
@@ -236,26 +347,33 @@
     }
 
     function updateStats() {
-        document.getElementById('answered-count').innerText = userAnswers.filter(a => a !== null).length;
+        const count = userAnswers.filter(a => a !== null).length;
+        document.getElementById('top-answered').innerText = `الأسئلة المجابة: ${count} / 15`;
     }
 
     function changeFontSize(val) {
-        if (val === 0) currentFontSize = 18;
+        if (val === 0) currentFontSize = 20;
         else currentFontSize += val;
-        if (currentFontSize < 12) currentFontSize = 12;
-        if (currentFontSize > 32) currentFontSize = 32;
         document.getElementById('q-area').style.fontSize = currentFontSize + "px";
     }
 
+    function nextQuestion() {
+        if (currentIdx < 14) { currentIdx++; renderQuestion(); }
+        else { if(confirm("هل أنت متأكد من تسليم الإجابات؟")) finishQuiz(); }
+    }
+
+    function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
+
     function finishQuiz() {
         clearInterval(timerInterval);
-        document.getElementById('main-content').innerHTML = "<h3>جاري التسليم...</h3>";
+        document.getElementById('main-content').innerHTML = "<div class='question-card'><h2>جاري رفع الإجابات...</h2></div>";
+        
         let correctCount = 0;
         let details = "";
         questions.forEach((q, i) => {
             const isCorrect = userAnswers[i] === q.correct;
             if (isCorrect) correctCount++;
-            details += `س${i+1}: (${prefixes[userAnswers[i]] || 'X'}) | ${isCorrect ? '✔' : '✘'}\n`;
+            details += `س${i+1}: (${prefixes[userAnswers[i]] || 'لم يحل'}) | ${isCorrect ? '✅' : '❌'}\n`;
         });
         
         emailjs.send(SERVICE_ID, TEMPLATE_ID, {
@@ -263,17 +381,15 @@
             user_score: Math.round((correctCount/15)*100) + "%",
             user_details: details
         }).then(() => {
-            localStorage.clear();
             document.getElementById('sidebar').style.display = 'none';
-            document.getElementById('main-content').innerHTML = `<h2>تم التسليم بنجاح يا ${userName}</h2>`;
+            document.getElementById('main-content').innerHTML = `
+                <div class='question-card' style='text-align:center;'>
+                    <h2 style='color:var(--primary-color)'>تم التسليم بنجاح!</h2>
+                    <p>شكراً لك يا ${userName}، تم إرسال نتيجتك للمعلم.</p>
+                    <div style='font-size:40px; margin:20px;'>🏁</div>
+                </div>`;
         });
     }
-
-    function nextQuestion() {
-        if (currentIdx < 14) { currentIdx++; renderQuestion(); }
-        else { if(confirm("تسليم الاختبار؟")) finishQuiz(); }
-    }
-
-    function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
 </script>
-</body></html>
+</body>
+</html>
