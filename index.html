@@ -6,28 +6,29 @@
     <style>
         :root { --primary-color: #008080; --bg-sidebar: #e9eff5; --white: #ffffff; --btn-prev: #eeeeee; }
         
-        /* العلامة المائية - الشعار الخاص بك */
-        body::before {
+        /* التعديل الجديد للعلامة المائية لضمان الظهور */
+        body::after {
             content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://i.ibb.co/xKfTBF1r/adfd5a1f-3530-4c63-ab3b-7dcf73cd6672.jpg');
-            background-repeat: repeat;
-            background-position: center;
-            background-size: 160px; /* حجم الشعار في الخلفية */
-            opacity: 0.05; /* درجة الشفافية خفيفة جداً حتى لا تعيق القراءة */
-            z-index: -1;
-            pointer-events: none;
-            filter: grayscale(100%); /* تحويله لرمادي ليكون رسمياً أكثر */
+            /* الرابط المباشر الصحيح */
+            background-image: url('https://i.ibb.co/xKfTBF1r/adfd5a1f-3530-4c63-ab3b-7dcf73cd6672.jpg') !important;
+            background-repeat: repeat !important;
+            background-position: center !important;
+            background-size: 150px !important; /* حجم الشعار */
+            opacity: 0.08 !important; /* زودت الشفافية شوية عشان تبان */
+            z-index: 9999 !important; /* خليتها فوق كل شيء */
+            pointer-events: none !important; /* عشان متمنعش الضغط على الزراير */
+            display: block !important;
         }
 
-        body { font-family: Arial, sans-serif; background-color: #f7f9fb; margin: 0; display: flex; flex-direction: column; height: 100vh; position: relative; }
-        header { background-color: var(--primary-color); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 5px; z-index: 10; }
-        .main-container { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 220px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        body { font-family: Arial, sans-serif; background-color: #f7f9fb; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background-color: var(--primary-color); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 5px; position: relative; z-index: 10000; }
+        .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .sidebar { width: 220px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; position: relative; z-index: 10000; }
         .timer-section { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 10px; text-align: center; }
         .timer-value { font-size: 22px; font-weight: bold; }
         .info-box { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 8px; text-align: center; font-size: 12px; }
@@ -35,7 +36,7 @@
         .q-num { width: 100%; height: 35px; background: white; border: 1px solid #ccd6dd; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; }
         .q-num.active { border: 2px solid orange; }
         .q-num.answered { background-color: #00a651; color: white; border: none; }
-        .content { flex: 1; padding: 15px; background: rgba(255, 255, 255, 0.8); display: flex; flex-direction: column; overflow-y: auto; }
+        .content { flex: 1; padding: 15px; background: white; display: flex; flex-direction: column; overflow-y: auto; position: relative; z-index: 10000; }
         .font-controls { display: flex; gap: 5px; margin-bottom: 15px; }
         .font-btn { background-color: #00bcd4; color: white; border: none; padding: 5px 12px; border-radius: 3px; cursor: pointer; }
         .option { padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; font-size: 15px; transition: 0.2s; background: white; }
@@ -44,9 +45,9 @@
         .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
         .btn-save { background-color: var(--primary-color); color: white; }
         .btn-prev { background-color: var(--btn-prev); color: #666; }
-        footer { background-color: var(--primary-color); color: white; text-align: center; padding: 10px; font-weight: bold; }
+        footer { background-color: var(--primary-color); color: white; text-align: center; padding: 10px; font-weight: bold; position: relative; z-index: 10000; }
 
-        #name-screen { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center; }
+        #name-screen { position: fixed; inset: 0; background: white; z-index: 20000; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center; }
         #name-input { padding: 15px; width: 280px; font-size: 18px; border: 2px solid var(--primary-color); border-radius: 8px; margin-bottom: 15px; text-align: center; outline: none; }
 
         @media (max-width: 768px) {
@@ -139,7 +140,6 @@
     let timerInterval;
     let currentFontSize = 18;
 
-    // استعادة البيانات عند تحميل الصفحة (Refresh)
     window.onload = function() {
         const savedName = localStorage.getItem('tiger_userName');
         const savedEndTime = localStorage.getItem('tiger_endTime');
