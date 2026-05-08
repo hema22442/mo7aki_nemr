@@ -5,8 +5,27 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { --primary-color: #008080; --bg-sidebar: #e9eff5; --white: #ffffff; --btn-prev: #eeeeee; }
-        body { font-family: Arial, sans-serif; background-color: #f7f9fb; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background-color: var(--primary-color); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 5px; }
+        
+        /* العلامة المائية - الشعار الخاص بك */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.ibb.co/xKfTBF1r/adfd5a1f-3530-4c63-ab3b-7dcf73cd6672.jpg');
+            background-repeat: repeat;
+            background-position: center;
+            background-size: 160px; /* حجم الشعار في الخلفية */
+            opacity: 0.05; /* درجة الشفافية خفيفة جداً حتى لا تعيق القراءة */
+            z-index: -1;
+            pointer-events: none;
+            filter: grayscale(100%); /* تحويله لرمادي ليكون رسمياً أكثر */
+        }
+
+        body { font-family: Arial, sans-serif; background-color: #f7f9fb; margin: 0; display: flex; flex-direction: column; height: 100vh; position: relative; }
+        header { background-color: var(--primary-color); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; flex-wrap: wrap; gap: 5px; z-index: 10; }
         .main-container { display: flex; flex: 1; overflow: hidden; }
         .sidebar { width: 220px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
         .timer-section { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 10px; text-align: center; }
@@ -16,10 +35,10 @@
         .q-num { width: 100%; height: 35px; background: white; border: 1px solid #ccd6dd; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; }
         .q-num.active { border: 2px solid orange; }
         .q-num.answered { background-color: #00a651; color: white; border: none; }
-        .content { flex: 1; padding: 15px; background: white; display: flex; flex-direction: column; overflow-y: auto; }
+        .content { flex: 1; padding: 15px; background: rgba(255, 255, 255, 0.8); display: flex; flex-direction: column; overflow-y: auto; }
         .font-controls { display: flex; gap: 5px; margin-bottom: 15px; }
         .font-btn { background-color: #00bcd4; color: white; border: none; padding: 5px 12px; border-radius: 3px; cursor: pointer; }
-        .option { padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; font-size: 15px; transition: 0.2s; }
+        .option { padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; font-size: 15px; transition: 0.2s; background: white; }
         .option.selected { border: 2px solid var(--primary-color); background-color: #e6f2f2; }
         .footer-controls { border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
         .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
@@ -27,8 +46,7 @@
         .btn-prev { background-color: var(--btn-prev); color: #666; }
         footer { background-color: var(--primary-color); color: white; text-align: center; padding: 10px; font-weight: bold; }
 
-        /* شاشة إدخال الاسم */
-        #name-screen { position: fixed; inset: 0; background: white; z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center; }
+        #name-screen { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; text-align: center; }
         #name-input { padding: 15px; width: 280px; font-size: 18px; border: 2px solid var(--primary-color); border-radius: 8px; margin-bottom: 15px; text-align: center; outline: none; }
 
         @media (max-width: 768px) {
@@ -43,6 +61,7 @@
 <body>
 
 <div id="name-screen">
+    <img src="https://i.ibb.co/xKfTBF1r/adfd5a1f-3530-4c63-ab3b-7dcf73cd6672.jpg" alt="Logo" style="width: 120px; margin-bottom: 20px;">
     <h2 style="color: var(--primary-color);">مرحباً بك في محاكي اختبار النمر</h2>
     <p>يرجى إدخال اسمك الثلاثي للبدء:</p>
     <input type="text" id="name-input" placeholder="اكتب اسمك هنا...">
@@ -117,9 +136,29 @@
 
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
-    let timeLeft = 900;
     let timerInterval;
     let currentFontSize = 18;
+
+    // استعادة البيانات عند تحميل الصفحة (Refresh)
+    window.onload = function() {
+        const savedName = localStorage.getItem('tiger_userName');
+        const savedEndTime = localStorage.getItem('tiger_endTime');
+        const savedAnswers = localStorage.getItem('tiger_answers');
+
+        if (savedName && savedEndTime) {
+            const now = Date.now();
+            if (now < savedEndTime) {
+                userName = savedName;
+                userAnswers = JSON.parse(savedAnswers) || new Array(questions.length).fill(null);
+                document.getElementById('name-screen').style.display = 'none';
+                renderQuestion();
+                updateStats();
+                startTimer(savedEndTime);
+            } else {
+                clearStorage();
+            }
+        }
+    };
 
     function startQuiz() {
         const input = document.getElementById('name-input');
@@ -128,9 +167,31 @@
             return;
         }
         userName = input.value.trim();
+        const endTime = Date.now() + (15 * 60 * 1000);
+        
+        localStorage.setItem('tiger_userName', userName);
+        localStorage.setItem('tiger_endTime', endTime);
+        localStorage.setItem('tiger_answers', JSON.stringify(userAnswers));
+
         document.getElementById('name-screen').style.display = 'none';
         renderQuestion();
-        startTimer();
+        startTimer(endTime);
+    }
+
+    function startTimer(endTime) {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            const now = Date.now();
+            const distance = endTime - now;
+            if (distance <= 0) {
+                clearInterval(timerInterval);
+                finishQuiz();
+                return;
+            }
+            let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let s = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById('timer-box').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+        }, 1000);
     }
 
     function renderQuestion() {
@@ -142,7 +203,12 @@
             const div = document.createElement('div');
             div.className = `option ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
             div.innerHTML = `<span style='margin-left:8px; font-weight:bold;'>${prefixes[i]}.</span> ${opt}`;
-            div.onclick = () => { userAnswers[currentIdx] = i; renderQuestion(); updateStats(); };
+            div.onclick = () => { 
+                userAnswers[currentIdx] = i; 
+                localStorage.setItem('tiger_answers', JSON.stringify(userAnswers));
+                renderQuestion(); 
+                updateStats(); 
+            };
             container.appendChild(div);
         });
         updateGrid();
@@ -171,6 +237,12 @@
         document.getElementById('q-area').style.fontSize = currentFontSize + "px";
     }
 
+    function clearStorage() {
+        localStorage.removeItem('tiger_userName');
+        localStorage.removeItem('tiger_endTime');
+        localStorage.removeItem('tiger_answers');
+    }
+
     function finishQuiz() {
         clearInterval(timerInterval);
         document.getElementById('main-content').innerHTML = "<h3>جاري تسليم إجاباتك يا " + userName + "...</h3>";
@@ -182,18 +254,19 @@
             details += `س${i+1}: (${prefixes[userAnswers[i]] || 'X'}) | الصح (${prefixes[q.correct]}) | ${isCorrect ? '✔' : '✘'}\n`;
         });
         
-        // تعديل البيانات المرسلة لتشمل الاسم
         const emailParams = {
-            user_name: userName, // تأكد أن قالب EmailJS يحتوي على {{user_name}}
+            user_name: userName,
             user_score: Math.round((correctCount/15)*100) + "%",
             user_details: details
         };
 
         emailjs.send(SERVICE_ID, TEMPLATE_ID, emailParams)
             .then(() => {
+                clearStorage();
                 document.getElementById('sidebar').style.display = 'none';
                 document.getElementById('main-content').innerHTML = `
                     <div style='text-align:center; padding-top:50px;'>
+                        <img src="https://i.ibb.co/xKfTBF1r/adfd5a1f-3530-4c63-ab3b-7dcf73cd6672.jpg" style="width:100px;">
                         <h1 style='color:var(--primary-color)'>تم التسليم بنجاح</h1>
                         <p>شكراً لك يا <b>${userName}</b>، تم إرسال نتيجتك للمشرف.</p>
                     </div>`;
@@ -206,13 +279,5 @@
     }
 
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
-
-    function startTimer() {
-        timerInterval = setInterval(() => {
-            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
-            document.getElementById('timer-box').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-            if(timeLeft-- <= 0) finishQuiz();
-        }, 1000);
-    }
 </script>
 </body></html>
