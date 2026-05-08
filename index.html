@@ -68,22 +68,12 @@
             border-radius: 10px; 
             padding: 15px; 
             text-align: center; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         .timer-value { font-size: 28px; font-weight: bold; color: #e74c3c; font-family: monospace; }
 
-        .info-box { 
-            background: var(--white); 
-            border-radius: 8px; 
-            padding: 10px; 
-            text-align: center; 
-            font-size: 14px; 
-            border: 1px solid #ddd;
-        }
-        
-        .questions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .questions-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
         .q-num { 
-            height: 40px; 
+            height: 35px; 
             background: white; 
             border: 1px solid #ccd6dd; 
             display: flex; 
@@ -92,7 +82,7 @@
             cursor: pointer; 
             font-weight: bold; 
             border-radius: 5px;
-            transition: 0.3s;
+            font-size: 12px;
         }
         .q-num.active { border: 2px solid #f39c12; background: #fffdf0; color: #f39c12; }
         .q-num.answered { background-color: var(--correct-green); color: white; border: none; }
@@ -115,54 +105,36 @@
             margin-bottom: 12px; 
             display: flex; 
             align-items: center; 
-            background: white;
-            transition: all 0.2s;
+            transition: 0.2s;
         }
-        .option:hover { background-color: #f0fafa; border-color: var(--primary-color); }
-        .option.selected { 
-            border: 2px solid var(--primary-color); 
-            background-color: #f0fafa; 
-        }
+        .option:hover { background-color: #f0fafa; }
+        .option.selected { border: 2px solid var(--primary-color); background-color: #f0fafa; }
 
         #name-screen { 
-            position: fixed; 
-            inset: 0; 
-            background: #ffffff; 
-            z-index: 2000; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            flex-direction: column; 
-            padding: 20px;
+            position: fixed; inset: 0; background: #ffffff; z-index: 2000; 
+            display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px;
         }
         
         #name-input { 
-            padding: 15px; 
-            width: 100%; 
-            max-width: 320px; 
-            font-size: 18px; 
-            border: 2px solid #008080; 
-            border-radius: 10px; 
-            margin-bottom: 20px; 
-            text-align: center; 
-            outline: none;
+            padding: 15px; width: 100%; max-width: 320px; font-size: 18px; 
+            border: 2px solid #008080; border-radius: 10px; margin-bottom: 20px; text-align: center;
         }
 
-        .btn { 
-            padding: 12px 30px; 
-            border-radius: 8px; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 16px;
-        }
+        .btn { padding: 12px 30px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
         .btn-save { background-color: var(--primary-color); color: white; }
 
-        footer { background-color: #222; color: #bbb; text-align: center; padding: 10px; font-size: 12px; }
+        footer { 
+            background-color: var(--primary-color); 
+            color: white; 
+            text-align: center; 
+            padding: 15px; 
+            font-size: 16px; 
+            font-weight: bold;
+        }
 
         @media (max-width: 768px) {
             .main-container { flex-direction: column-reverse; }
-            .sidebar { width: auto; border-left: none; border-top: 2px solid #ddd; }
+            .sidebar { width: auto; border-top: 2px solid #ddd; }
         }
     </style>
 </head>
@@ -170,24 +142,22 @@
 
 <div id="name-screen">
     <img src="https://i.ibb.co/qYjkGjbD/6cc50c2f-b3ae-4567-9938-c6babc3abd37.jpg" alt="Logo" style="width: 150px; height: 150px; object-fit: cover; margin-bottom: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    
     <h2 style="color: var(--primary-color); margin-bottom: 10px;">نظام محاكاة اختبار النمر</h2>
-    <p style="color: #666; margin-bottom: 25px;">أدخل اسمك الثلاثي لبدء الجلسة</p>
-    
+    <p style="color: #666; margin-bottom: 25px;">أدخل اسمك الثلاثي لبدء الاختبار (30 سؤال)</p>
     <input type="text" id="name-input" placeholder="اكتب اسمك هنا...">
-    
     <button class="btn btn-save" style="width: 100%; max-width: 320px;" onclick="startQuiz()">ابدأ الاختبار الآن</button>
 </div>
 
 <header>
-    <div id="top-answered">الأسئلة المجابة: 0 / 15</div>
-    <div style="font-weight: bold; font-size: 16px;">محاكي اختبار نمر</div>
+    <div id="top-answered">الأسئلة المجابة: 0 / 30</div>
+    <div style="font-weight: bold;">محاكي اختبار النمر</div>
     <div id="user-display">مرحباً بك</div>
 </header>
 
 <div class="main-container">
     <div class="content" id="main-content">
         <div class="question-card" id="quiz-ui">
+            <div id="section-title" style="color: var(--primary-color); font-weight: bold; margin-bottom: 10px;"></div>
             <div class="question-area" id="q-area">
                 <div id="q-text" style="font-weight: bold; margin-bottom: 25px; font-size: 1.3em;">جاري التحميل...</div>
                 <div id="options-container"></div>
@@ -204,12 +174,11 @@
             <div style="font-size: 12px; color: #666;">الوقت المتبقي</div>
             <div class="timer-value" id="timer-box">30:00</div>
         </div>
-        <div class="info-box">خريطة الأسئلة</div>
         <div class="questions-grid" id="q-grid"></div>
     </div>
 </div>
 
-<footer>حقوق الطبع محفوظة &copy; 2024 محاكي اختبار النمر</footer>
+<footer>صلي على النبي ﷺ</footer>
 
 <script>
     const PUBLIC_KEY = "cQYqz70Te8w8308k-"; 
@@ -219,22 +188,42 @@
 
     let userName = "";
     const prefixes = ["أ", "ب", "ج", "د"];
+    
+    // مصفوفة الـ 30 سؤال (15 كمي ثم 15 لفظي)
     const questions = [
+        // --- القسم الكمي (1 - 15) ---
+        { q: "سؤال كمي 1: ما قيمة 2 + 2؟", options: ["2", "4", "6", "8"], correct: 1 },
+        { q: "سؤال كمي 2: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 3: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 4: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 5: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 6: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 7: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 8: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 9: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 10: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 11: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 12: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 13: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 14: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "سؤال كمي 15: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+
+        // --- القسم اللفظي (16 - 30) ---
         { q: "زفير : شهيق", options: ["غطس : طفو", "طرق : سيارة", "قراءة : كتابة", "حليب : لبن"], correct: 0 },
         { q: "رف : دولاب", options: ["جبهة : رأس", "رمش : حاجب", "كتاب : مطبعة", "كهرباء : مولد"], correct: 0 },
         { q: "جمر : رماد", options: ["إنسان : موت", "شمس : غروب", "شيخ : طفل", "عجين : خبز"], correct: 0 },
         { q: "نواة : خلية", options: ["ذهب : ميزان", "درج : خزانه", "جذر : تربة", "حقيبة : قلم"], correct: 1 },
-        { q: "إن خروج الإنسان من دائرة ........ الضيقة في إيثار نفسه إلى دائرة أعم وأشمل في محبة الآخرين لهو ........ خلقي كريم", options: ["اهتماماته - انحياز", "أنانيته - ارتقاء", "محيطه - تواضع", "مجتمعه - نمط"], correct: 1 },
-        { q: "يحدث المد والجزر بسبب قرب القمر من الأرض وبسبب ذلك تزداد جاذبية .... سرعته رغم صغر حجمه.", options: ["أقرب", "سرعته", "رغم", "صغر"], correct: 1 },
-        { q: "اشتغال ( انشغال ) ……….. بنفسه وتقويمها ، خير من تقويم ………", options: ["المفكر - الفكرة", "المعلم - الطلاب", "المدير - المدرسة", "المرء - الأخرين"], correct: 3 },
-        { q: "مصارع ....... في .......", options: ["القوم _ أهوائهم", "الناس _ أرزاقهم", "العقلاء _ آرائهم", "الجهلاء _ سفهاءهم"], correct: 0 },
-        { q: "اصبر على من عاداك من ذوي النصيحة والتجرع لمرارة قولهم.", options: ["التجرع", "اصبر", "عاداك", "لمرارة"], correct: 2 },
-        { q: "استبسل الجنود في المعركة فبذلك فاز الأعداء بيسر وسهولة.", options: ["استبسل", "المعركة", "بيسر", "سهولة"], correct: 0 },
-        { q: "الرجل العظيم يقوم بالتروي في أقواله والسرعة في كلامه.", options: ["العظيم", "التروي", "أقواله", "كلامه"], correct: 3 },
-        { q: "يلقى الشاعر كلمته العصماء فتحرك النفوس وتطرب الأسماع.", options: ["كلمته", "العصماء", "النفوس", "تطرب"], correct: 0 },
-        { q: "رئة : تنفس", options: ["معدة : هضم", "عين : سهر", "لسان : ذوق", "أذن : سماعة"], correct: 0 },
-        { q: "خيط : ثوب", options: ["خرز : مسبحة", "باب : جدار", "غصن : شجرة", "ورقة : كتاب"], correct: 0 },
-        { q: "قدم : جسم", options: ["عجلة : سيارة", "غصن : شجرة", "محراب : مسجد", "نافذة : غرفة"], correct: 0 }
+        { q: "لفظي 20: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 21: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 22: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 23: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 24: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 25: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 26: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 27: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 28: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 29: ...", options: ["أ", "ب", "ج", "د"], correct: 0 },
+        { q: "لفظي 30: ...", options: ["أ", "ب", "ج", "د"], correct: 0 }
     ];
 
     let currentIdx = 0;
@@ -244,15 +233,12 @@
     function startQuiz() {
         const input = document.getElementById('name-input');
         if (input.value.trim().length < 3) {
-            alert("يرجى إدخال اسمك الثلاثي بشكل صحيح.");
+            alert("يرجى إدخال الاسم الثلاثي.");
             return;
         }
         userName = input.value.trim();
         document.getElementById('user-display').innerText = userName;
-        
-        // ضبط التايمر على 30 دقيقة
-        const endTime = Date.now() + (30 * 60 * 1000); 
-        
+        const endTime = Date.now() + (30 * 60 * 1000);
         document.getElementById('name-screen').style.display = 'none';
         renderQuestion();
         startTimer(endTime);
@@ -261,11 +247,7 @@
     function startTimer(endTime) {
         timerInterval = setInterval(() => {
             const distance = endTime - Date.now();
-            if (distance <= 0) {
-                clearInterval(timerInterval);
-                finishQuiz();
-                return;
-            }
+            if (distance <= 0) { clearInterval(timerInterval); finishQuiz(); return; }
             let m = Math.floor(distance / 60000);
             let s = Math.floor((distance % 60000) / 1000);
             document.getElementById('timer-box').innerText = `${m}:${s < 10 ? '0'+s : s}`;
@@ -274,6 +256,7 @@
 
     function renderQuestion() {
         const q = questions[currentIdx];
+        document.getElementById('section-title').innerText = currentIdx < 15 ? "القسم الكمي" : "القسم اللفظي";
         document.getElementById('q-text').innerText = `السؤال ${currentIdx + 1}: ${q.q}`;
         const container = document.getElementById('options-container');
         container.innerHTML = '';
@@ -302,19 +285,19 @@
 
     function updateStats() {
         const count = userAnswers.filter(a => a !== null).length;
-        document.getElementById('top-answered').innerText = `الأسئلة المجابة: ${count} / 15`;
+        document.getElementById('top-answered').innerText = `الأسئلة المجابة: ${count} / 30`;
     }
 
     function nextQuestion() {
-        if (currentIdx < 14) { currentIdx++; renderQuestion(); }
-        else { if(confirm("هل أنت متأكد من تسليم الإجابات؟")) finishQuiz(); }
+        if (currentIdx < 29) { currentIdx++; renderQuestion(); }
+        else { if(confirm("هل أنت متأكد من تسليم الاختبار؟")) finishQuiz(); }
     }
 
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
 
     function finishQuiz() {
         clearInterval(timerInterval);
-        document.getElementById('main-content').innerHTML = "<div class='question-card'><h2>جاري رفع الإجابات...</h2></div>";
+        document.getElementById('main-content').innerHTML = "<div class='question-card' style='text-align:center;'><h2>جاري معالجة نتيجتك...</h2></div>";
         
         let correctCount = 0;
         let details = "";
@@ -323,17 +306,24 @@
             if (isCorrect) correctCount++;
             details += `س${i+1}: (${prefixes[userAnswers[i]] || 'لم يحل'}) | ${isCorrect ? '✅' : '❌'}\n`;
         });
+
+        const scorePercent = Math.round((correctCount / 30) * 100);
         
         emailjs.send(SERVICE_ID, TEMPLATE_ID, {
             user_name: userName,
-            user_score: Math.round((correctCount/15)*100) + "%",
+            user_score: scorePercent + "%",
             user_details: details
         }).then(() => {
             document.getElementById('sidebar').style.display = 'none';
             document.getElementById('main-content').innerHTML = `
                 <div class='question-card' style='text-align:center;'>
                     <h2 style='color:var(--primary-color)'>تم التسليم بنجاح!</h2>
-                    <p>شكراً لك يا ${userName}، تم إرسال نتيجتك للمعلم.</p>
+                    <p style='font-size:1.2em;'>شكراً لك يا <b>${userName}</b>، تم إرسال نتيجتك بنجاح.</p>
+                    <hr style='margin:20px 0; border:0; border-top:1px solid #eee;'>
+                    <div style='background:#f9f9f9; padding:20px; border-radius:10px;'>
+                        <p style='font-size:1.1em;'>درجتك هي: <span style='color:var(--primary-color); font-weight:bold;'>${correctCount} من 30</span></p>
+                        <p style='font-size:1.5em; font-weight:bold;'>نسبتك المئوية: %${scorePercent}</p>
+                    </div>
                 </div>`;
         });
     }
