@@ -8,7 +8,6 @@
     <style>
         :root { 
             --primary-color: #008080; 
-            --accent-color: #00bcd4;
             --bg-sidebar: #f0f4f8; 
             --white: #ffffff; 
             --text-dark: #333;
@@ -87,7 +86,7 @@
         .q-num.active { border: 2px solid #f39c12; background: #fffdf0; color: #f39c12; }
         .q-num.answered { background-color: var(--correct-green); color: white; border: none; }
         
-        .content { flex: 1; padding: 30px; background: rgba(255, 255, 255, 0.88); overflow-y: auto; }
+        .content { flex: 1; padding: 20px; background: rgba(255, 255, 255, 0.85); overflow-y: auto; }
         .question-card {
             background: white;
             padding: 25px;
@@ -98,14 +97,15 @@
         }
 
         .option { 
-            padding: 15px 20px; 
+            padding: 12px 18px; 
             border: 1px solid #dee2e6; 
             border-radius: 10px; 
             cursor: pointer; 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             display: flex; 
             align-items: center; 
             transition: 0.2s;
+            font-size: 15px;
         }
         .option:hover { background-color: #f0fafa; }
         .option.selected { border: 2px solid var(--primary-color); background-color: #f0fafa; }
@@ -127,7 +127,7 @@
             background-color: var(--primary-color); 
             color: white; 
             text-align: center; 
-            padding: 15px; 
+            padding: 12px; 
             font-size: 16px; 
             font-weight: bold;
         }
@@ -141,29 +141,27 @@
 <body>
 
 <div id="name-screen">
-    <img src="https://i.ibb.co/qYjkGjbD/6cc50c2f-b3ae-4567-9938-c6babc3abd37.jpg" alt="Logo" style="width: 150px; height: 150px; object-fit: cover; margin-bottom: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="color: var(--primary-color); margin-bottom: 10px;">نظام محاكاة اختبار النمر</h2>
-    <p style="color: #666; margin-bottom: 25px;">أدخل اسمك الثلاثي لبدء الاختبار (30 سؤال)</p>
-    <input type="text" id="name-input" placeholder="اكتب اسمك هنا...">
-    <button class="btn btn-save" style="width: 100%; max-width: 320px;" onclick="startQuiz()">ابدأ الاختبار الآن</button>
+    <img src="https://i.ibb.co/qYjkGjbD/6cc50c2f-b3ae-4567-9938-c6babc3abd37.jpg" alt="Logo" style="width: 130px; height: 130px; object-fit: cover; margin-bottom: 20px; border-radius: 15px;">
+    <h2 style="color: var(--primary-color); margin: 0 0 10px 0;">نظام محاكاة اختبار النمر</h2>
+    <p style="color: #666; margin-bottom: 20px;">يرجى إدخال اسمك لبدء الاختبار</p>
+    <input type="text" id="name-input" placeholder="اكتب اسمك الثلاثي هنا...">
+    <button class="btn btn-save" style="width: 100%; max-width: 320px;" onclick="startQuiz()">ابدأ الاختبار</button>
 </div>
 
 <header>
-    <div id="top-answered">الأسئلة المجابة: 0 / 30</div>
+    <div id="top-answered">المجابة: 0 / 30</div>
     <div style="font-weight: bold;">محاكي اختبار النمر</div>
-    <div id="user-display">مرحباً بك</div>
+    <div id="user-display">مرحباً</div>
 </header>
 
 <div class="main-container">
     <div class="content" id="main-content">
         <div class="question-card" id="quiz-ui">
-            <div id="section-title" style="color: var(--primary-color); font-weight: bold; margin-bottom: 10px;"></div>
-            <div class="question-area" id="q-area">
-                <div id="q-text" style="font-weight: bold; margin-bottom: 25px; font-size: 1.2em; line-height: 1.6;">جاري التحميل...</div>
-                <div id="options-container"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 30px;">
-                <button class="btn" style="background: #e0e0e0;" onclick="prevQuestion()">السابق</button>
+            <div id="section-title" style="color: var(--primary-color); font-weight: bold; margin-bottom: 8px; font-size: 0.9em;"></div>
+            <div id="q-text" style="font-weight: bold; margin-bottom: 20px; font-size: 1.15em; line-height: 1.6; color: #222;"></div>
+            <div id="options-container"></div>
+            <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                <button class="btn" style="background: #eee;" onclick="prevQuestion()">السابق</button>
                 <button class="btn btn-save" onclick="nextQuestion()">حفظ والتالي</button>
             </div>
         </div>
@@ -171,7 +169,7 @@
 
     <div class="sidebar" id="sidebar">
         <div class="timer-section">
-            <div style="font-size: 12px; color: #666;">الوقت المتبقي</div>
+            <div style="font-size: 11px; color: #666;">الوقت المتبقي</div>
             <div class="timer-value" id="timer-box">30:00</div>
         </div>
         <div class="questions-grid" id="q-grid"></div>
@@ -190,38 +188,38 @@
     const prefixes = ["أ", "ب", "ج", "د"];
     
     const questions = [
-        // --- القسم الكمي (1 - 15) ---
+        // الكمي (1-15)
         { q: "تحمل لوحات السيارات في السعودية 3 حروف و3 ارقام، فكم عدد اللوحات التي تحمل 3 حروف متشابهة و3 ارقام متشابهة وارقامها ليس جميعها متطابقة؟", options: ["2520", "28000", "27720", "27360"], correct: 3 },
         { q: "يسال اب ابنه كل يوم سؤال، اذا كانت الاجابة صحيحة ياخذ ريالين واذا كانت الاجابة خاطئة ياخذ ريال، وفي نهاية الشهر جمع الابن 47 ريال، ما نسبة الاسئلة التي جاوبها الابن اجابة صحيحة تقريبا؟", options: ["37%", "41%", "43%", "57%"], correct: 3 },
         { q: "يسال أب ابنه كل يوم سؤال، اذا كانت الاجابة صحيحة ياخذ ريالين واذا كانت الاجابة خاطئة ياخذ ريال، وفي نهاية الشهر جمع الابن 43 ريال، ما نسبة الاسئلة التي جاوبها الابن اجابة صحيحة؟", options: ["37%", "41%", "43%", "45%"], correct: 2 },
         { q: "إذا كان س³ ل < 0 ، س ل² > 0 ، أي الآتي صحيح؟", options: ["س < 0 ، ل < 0", "س > 0 ، ل < 0", "س < 0 ، ل > 0", "س > 0 ، ل > 0"], correct: 1 },
         { q: "احمد يعمل يوميا اونلاين في منزله، ولكن بعد كل 4 ايام يعمل يوما حضوريا، بعد كم يوم يتكرر نفس اليوم الذي بدأ فيه الدوام الحضوري اول مرة؟", options: ["20", "30", "35", "48"], correct: 2 },
         { q: "أوجد الحد التالي: 112، 334، 556، 778، .....", options: ["99", "9000", "9009", "9910"], correct: 3 },
-        { q: "20 معلم و 20 مهندس و 18 طبيب و 17 طالب صرفوا 13200 ريال، فإذا كان: 5 معلمين صرفوا مثل 4 مهندسين، 12 مهندس صرفوا مثل 9 أطباء، 6 أطباء صرفوا مثل 8 طلاب. كم متوسط صرف كل مهندس؟", options: ["180", "175", "210", "240"], correct: 3 },
+        { q: "20 معلم و 20 مهندس و 18 طبيب و 17 طالب صرفوا 13200 ريال. إذا كان: 5 معلمين صرفوا مثل 4 مهندسين، 12 مهندس مثل 9 أطباء، 6 أطباء مثل 8 طلاب. كم متوسط صرف كل مهندس؟", options: ["180", "175", "210", "240"], correct: 3 },
         { q: "(م، ن، ج، ل، ف) نقاط في المستوى الإحداثي، إذا كانت ل تقع شرق م وغرب ن، و ج تقع جنوب شرق ن، و م تقع جنوب شرق ف، فأي الآتي يقع في أقصى الغرب؟", options: ["ف", "ج", "ن", "ل"], correct: 0 },
-        { q: "تتابع مريم متوسط درجاتها، فإذا اختبرت 3 اختبارات وإذا حصلت مريم على 1 الدرجة في الاختبار التالي سيزيد متوسطها درجتها 1، وإذا حصلت على 1 في كل اختبار من الاختبارات الثلاثة التالية فسينخفض متوسط درجاتها 1، ما هو متوسط درجات اختباراتها حاليا؟", options: ["4", "5", "6", "7"], correct: 1 },
+        { q: "تتابع مريم متوسط درجاتها. إذا اختبرت 3 اختبارات وحصلت على درجة في الاختبار التالي سيزيد متوسطها 1، وإذا حصلت على 1 في 3 اختبارات تالية سينخفض 1. ما متوسطها حالياً؟", options: ["4", "5", "6", "7"], correct: 1 },
         { q: "عدد مكون من خانتين س ص، إذا كان تقريب العدد إلى أقرب 10 يساوي 100، فأي الآتي صحيح؟", options: ["س + ص = 9", "س - ص = 0", "ص - س = 4", "ص - س = 0"], correct: 2 },
-        { q: "نملة موجودة في حفرة عمقها 10 متر، كل يوم تصعد 4م وتنزلق 2م، بعد كم يوماً تخرج النملة من الحفرة؟", options: ["8", "9", "10", "11"], correct: 0 },
+        { q: "نملة في حفرة عمقها 10 متر، كل يوم تصعد 4م وتنزلق 2م، بعد كم يوماً تخرج؟", options: ["8", "9", "10", "11"], correct: 0 },
         { q: "ما قيمة: (1 + 2 + 3 + ..... + 51) - (2 + 4 + 6 + ..... + 30)؟", options: ["1226", "1236", "1068", "1086"], correct: 3 },
         { q: "كم عدد يمكن تكوينه من الأرقام (1 ، 2 ، 3 ، 5) بدون تكرار؟", options: ["23", "32", "54", "64"], correct: 3 },
-        { q: "لاحظ رجل يجلس في قطار سرعته 50 كم/س أن قطار بضائع يسير عكس الاتجاه وقد مر كاملاً خلال 9 ثواني، فإذا كان طول القطار 280 م، ما سرعة قطار البضائع بـ (كم/س)؟", options: ["50", "52", "62", "112"], correct: 2 },
-        { q: "إذا كان عدد المتقدمين لأخذ تطعيم كورونا في منطقة الأحساء 5400 شخص وأخذ التطعيم 20%، كم نسبة من يأخذ التطعيم ممن لم يأخذوا التطعيم ليكون نصف عدد المتقدمين أخذ التطعيم؟", options: ["25%", "33%", "37.5%", "50%"], correct: 2 },
+        { q: "رجل في قطار سرعته 50 كم/س لاحظ قطار بضائع عكس الاتجاه مر كاملاً في 9 ثواني، طول القطار 280 م، ما سرعة قطار البضائع؟", options: ["50", "52", "62", "112"], correct: 2 },
+        { q: "المتقدمين للتطعيم 5400، أخذ التطعيم 20%. كم نسبة من يأخذ التطعيم ممن لم يأخذوا ليكون نصف عدد المتقدمين قد أخذ التطعيم؟", options: ["25%", "33%", "37.5%", "50%"], correct: 2 },
 
-        // --- القسم اللفظي (16 - 30) بناءً على تعديلاتك الأخيرة ---
-        { q: "مطر:نبات", options: ["عقل:علم", "جهل فشل", "مدرسة:اجتهاد", "شهادة:نجاح"], correct: 0 },
-        { q: "عبارة:معنى", options: ["طهارة:صلاة", "سفرة:طاولة", "طاعة:ثواب"], correct: 2 },
-        { q: "ورق : حلي", options: ["ماء : ارتواء", "قمح : خبز", "زهر : رحيق", "عسل : نحل"], correct: 1 },
+        // اللفظي (16-30)
+        { q: "التناظر اللفظي - مطر:نبات", options: ["عقل:علم", "جهل فشل", "مدرسة:اجتهاد", "شهادة:نجاح"], correct: 0 },
+        { q: "التناظر اللفظي - عبارة:معنى", options: ["طهارة:صلاة", "سفرة:طاولة", "طاعة:ثواب"], correct: 2 },
+        { q: "التناظر اللفظي - ورق : حلي", options: ["ماء : ارتواء", "قمح : خبز", "زهر : رحيق", "عسل : نحل"], correct: 1 },
         { q: "التعليم الإلكتروني عن طريق.....من الوسائل....في هذا العصر.", options: ["الحاسب-التقليدية", "الإنترنت-التقنية", "المذياع-الحديثة", "الإنترنت-التقليدية"], correct: 1 },
         { q: "إذا أمكنك توصيل فكرتك في.....لا تجعلها في......", options: ["جملة-حروف", "كتاب-صفحات", "كلمة-صفحة", "صفحة-كتاب"], correct: 2 },
         { q: "كل شيء ........ تنساه إلا ما ........ .", options: ["أدرسته - أتقنته", "قرأته - حفظته", "سمعته - فهمته", "تعلمته - أتقنته"], correct: 2 },
-        { q: "لا يتحقق الوفاء الا بالغدر،وإذا كان الغدر موجوداً فإن ثقه الناس ببعضهم عجز.", options: ["الغدر", "ببعضهم", "الوفاء", "فالثقه"], correct: 1 },
-        { q: "معلم نفسه ومؤدبها أحق بالإجلال من معلم ذاته ومؤدبها.", options: ["نفسه", "أحق", "بالإستحقاق", "ذاته"], correct: 3 },
-        { q: "الحقيقة بنت البحث وتفضل في يد المناظرات.", options: ["الحقيقه", "البحث", "تفضل", "يد"], correct: 3 },
-        { q: "شعر/قصيدة/ديوان/قصة (حدد المفردة الشاذة)", options: ["شعر", "قصيدة", "ديوان", "قصة"], correct: 3 },
-        { q: "محسن/كريم/شجاع/سخي (حدد المفردة الشاذة)", options: ["محسن", "كريم", "شجاع", "سخي"], correct: 3 },
-        { q: "الذخيرة/القنبلة/البندقية/الصاروخ (حدد المفردة الشاذة)", options: ["الذخيرة", "القنبلة", "البندقية", "الصاروخ"], correct: 0 },
-        { q: "ما المقصود ب ( التنزه في عقول الناس ) ؟", options: ["مرافقة البسطاء", "التحدث مع الناس", "قراءة ما يكتبونه"], correct: 2 },
-        { q: "من خلال النص يفهم أن سبب الأنفة:", options: ["التكبر", "العلم الغزير", "احتقار المسألة", "الحياء"], correct: 3 },
+        { q: "الخطأ السياقي - لا يتحقق الوفاء الا بالغدر، وإذا كان الغدر موجوداً فإن ثقة الناس ببعضهم عجز.", options: ["الغدر", "ببعضهم", "الوفاء", "فالثقة"], correct: 1 },
+        { q: "الخطأ السياقي - معلم نفسه ومؤدبها أحق بالإجلال من معلم ذاته ومؤدبها.", options: ["نفسه", "أحق", "بالإستحقاق", "ذاته"], correct: 3 },
+        { q: "الخطأ السياقي - الحقيقة بنت البحث وتفضل في يد المناظرات.", options: ["الحقيقة", "البحث", "تفضل", "يد"], correct: 3 },
+        { q: "المفردة الشاذة - حدد الكلمة المختلفة:", options: ["شعر", "قصيدة", "ديوان", "قصة"], correct: 3 },
+        { q: "المفردة الشاذة - حدد الكلمة المختلفة:", options: ["محسن", "كريم", "شجاع", "سخي"], correct: 3 },
+        { q: "المفردة الشاذة - حدد الكلمة المختلفة:", options: ["الذخيرة", "القنبلة", "البندقية", "الصاروخ"], correct: 0 },
+        { q: "المقصود بـ ( التنزه في عقول الناس ) هو:", options: ["مرافقة البسطاء", "التحدث مع الناس", "قراءة ما يكتبونه"], correct: 2 },
+        { q: "من خلال النص (توانيت في أوان التعلم...) سبب الأنفة هو:", options: ["التكبر", "العلم الغزير", "احتقار المسألة", "الحياء"], correct: 3 },
         { q: "(إني ميت وأنهم لميتون) تعتبر:", options: ["من الفأل", "امتثال", "اقتباس", "يأس"], correct: 2 }
     ];
 
@@ -231,10 +229,7 @@
 
     function startQuiz() {
         const input = document.getElementById('name-input');
-        if (input.value.trim().length < 3) {
-            alert("يرجى إدخال الاسم الثلاثي.");
-            return;
-        }
+        if (input.value.trim().length < 3) { alert("أدخل اسمك الثلاثي"); return; }
         userName = input.value.trim();
         document.getElementById('user-display').innerText = userName;
         const endTime = Date.now() + (30 * 60 * 1000);
@@ -256,14 +251,13 @@
     function renderQuestion() {
         const q = questions[currentIdx];
         document.getElementById('section-title').innerText = currentIdx < 15 ? "القسم الكمي" : "القسم اللفظي";
-        document.getElementById('q-text').innerText = `السؤال ${currentIdx + 1}: ${q.q}`;
+        document.getElementById('q-text').innerText = `س${currentIdx + 1}: ${q.q}`;
         const container = document.getElementById('options-container');
         container.innerHTML = '';
-        
         q.options.forEach((opt, i) => {
             const div = document.createElement('div');
             div.className = `option ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
-            div.innerHTML = `<span style="background:var(--primary-color); color:white; width:25px; height:25px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; margin-left:10px;">${prefixes[i]}</span> <span>${opt}</span>`;
+            div.innerHTML = `<span style="background:var(--primary-color); color:white; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; margin-left:10px; font-size:12px;">${prefixes[i]}</span> <span>${opt}</span>`;
             div.onclick = () => { userAnswers[currentIdx] = i; renderQuestion(); updateStats(); };
             container.appendChild(div);
         });
@@ -284,30 +278,27 @@
 
     function updateStats() {
         const count = userAnswers.filter(a => a !== null).length;
-        document.getElementById('top-answered').innerText = `الأسئلة المجابة: ${count} / 30`;
+        document.getElementById('top-answered').innerText = `المجابة: ${count} / 30`;
     }
 
     function nextQuestion() {
         if (currentIdx < 29) { currentIdx++; renderQuestion(); }
-        else { if(confirm("هل أنت متأكد من تسليم الاختبار؟")) finishQuiz(); }
+        else { if(confirm("تسليم الاختبار؟")) finishQuiz(); }
     }
 
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
 
     function finishQuiz() {
         clearInterval(timerInterval);
-        document.getElementById('main-content').innerHTML = "<div class='question-card' style='text-align:center;'><h2>جاري معالجة نتيجتك...</h2></div>";
-        
+        document.getElementById('main-content').innerHTML = "<div class='question-card' style='text-align:center;'><h2>جاري الحفظ...</h2></div>";
         let correctCount = 0;
         let details = "";
         questions.forEach((q, i) => {
             const isCorrect = userAnswers[i] === q.correct;
             if (isCorrect) correctCount++;
-            details += `س${i+1}: (${prefixes[userAnswers[i]] || 'لم يحل'}) | ${isCorrect ? '✅' : '❌'}\n`;
+            details += `س${i+1}: (${prefixes[userAnswers[i]] || 'X'}) | ${isCorrect ? '✅' : '❌'}\n`;
         });
-
         const scorePercent = Math.round((correctCount / 30) * 100);
-        
         emailjs.send(SERVICE_ID, TEMPLATE_ID, {
             user_name: userName,
             user_score: scorePercent + "%",
@@ -317,11 +308,10 @@
             document.getElementById('main-content').innerHTML = `
                 <div class='question-card' style='text-align:center;'>
                     <h2 style='color:var(--primary-color)'>تم التسليم بنجاح!</h2>
-                    <p style='font-size:1.2em;'>شكراً لك يا <b>${userName}</b>، تم إرسال نتيجتك بنجاح.</p>
-                    <hr style='margin:20px 0; border:0; border-top:1px solid #eee;'>
-                    <div style='background:#f9f9f9; padding:20px; border-radius:10px;'>
-                        <p style='font-size:1.1em;'>درجتك هي: <span style='color:var(--primary-color); font-weight:bold;'>${correctCount} من 30</span></p>
-                        <p style='font-size:1.5em; font-weight:bold;'>نسبتك المئوية: %${scorePercent}</p>
+                    <p>أحسنت يا <b>${userName}</b>، تم إرسال نتيجتك.</p>
+                    <div style='background:#f1f1f1; padding:15px; border-radius:10px; margin-top:15px;'>
+                        <p>درجتك: ${correctCount} من 30</p>
+                        <p style='font-size:1.4em; font-weight:bold;'>النسبة: %${scorePercent}</p>
                     </div>
                 </div>`;
         });
