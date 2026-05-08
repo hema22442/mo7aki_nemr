@@ -7,7 +7,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root { 
-            --primary-color: #008080; 
+            --primary-color: #00a5a5; /* اللون التيل القريب من الصورة */
             --bg-sidebar: #f0f4f8; 
             --white: #ffffff; 
             --text-dark: #333;
@@ -57,7 +57,7 @@
             padding: 20px 15px; 
             display: flex; 
             flex-direction: column; 
-            gap: 20px; 
+            gap: 15px; 
             overflow-y: auto; 
         }
         
@@ -70,21 +70,29 @@
         }
         .timer-value { font-size: 28px; font-weight: bold; color: #e74c3c; font-family: monospace; }
 
-        .font-controls {
+        /* ستايل أزرار الخط مثل الصورة */
+        .font-controls-sidebar {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            padding: 10px 0;
         }
-
-        .font-btn {
-            background: #eee;
-            border: 1px solid #ccc;
-            padding: 5px 15px;
-            border-radius: 5px;
+        .font-btn-img {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
         }
+        .font-btn-img:active { transform: scale(0.95); }
 
         .questions-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
         .q-num { 
@@ -132,7 +140,7 @@
         
         #name-input { 
             padding: 15px; width: 100%; max-width: 320px; font-size: 18px; 
-            border: 2px solid #008080; border-radius: 10px; margin-bottom: 20px; text-align: center;
+            border: 2px solid var(--primary-color); border-radius: 10px; margin-bottom: 20px; text-align: center;
         }
 
         .btn { padding: 12px 30px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
@@ -171,12 +179,7 @@
 <div class="main-container">
     <div class="content" id="main-content">
         <div class="question-card" id="quiz-ui">
-            <div class="font-controls">
-                <button class="font-btn" onclick="changeFontSize(2)">A+</button>
-                <button class="font-btn" onclick="changeFontSize(-2)">A-</button>
-                <span style="font-size: 12px; color: #666; align-self: center;">حجم الخط</span>
-            </div>
-            <div id="section-title" style="color: var(--primary-color); font-weight: bold; margin-bottom: 8px;"></div>
+            <div id="section-title" style="color: var(--primary-color); font-weight: bold; margin-bottom: 8px; font-size: 14px;"></div>
             <div id="q-text" style="font-weight: bold; margin-bottom: 20px; line-height: 1.6; color: #222; font-size: 18px;"></div>
             <div id="options-container"></div>
             <div style="display: flex; justify-content: space-between; margin-top: 25px;">
@@ -191,6 +194,13 @@
             <div style="font-size: 11px; color: #666;">الوقت المتبقي</div>
             <div class="timer-value" id="timer-box">30:00</div>
         </div>
+        
+        <div class="font-controls-sidebar">
+            <button class="font-btn-img" onclick="changeFontSize(2)">+A</button>
+            <button class="font-btn-img" onclick="resetFontSize()">A</button>
+            <button class="font-btn-img" onclick="changeFontSize(-2)">-A</button>
+        </div>
+
         <div class="questions-grid" id="q-grid"></div>
     </div>
 </div>
@@ -208,24 +218,24 @@
     const prefixes = ["أ", "ب", "ج", "د"];
     
     const questions = [
-        // الكمي (1-15)
-        { q: "تحمل لوحات السيارات في السعودية 3 حروف و3 ارقام، فكم عدد اللوحات التي تحمل 3 حروف متشابهة و3 ارقام متشابهة وارقامها ليس جميعها متطابقة؟", options: ["2520", "28000", "27720", "27360"], correct: 3 },
+        // القسم الكمي (1-15) - تم تعديل المفاتيح (correct) بناءً على إجاباتك الجديدة
+        { q: "تحمل لوحات السيارات في السعودية 3 حروف و3 ارقام، فكم عدد اللوحات التي تحمل 3 حروف متشابهة و3 ارقام متشابهة وارقامها ليس جميعها متطابقة؟", options: ["2520", "28000", "27720", "27360"], correct: 2 },
         { q: "يسال اب ابنه كل يوم سؤال، اذا كانت الاجابة صحيحة ياخذ ريالين واذا كانت الاجابة خاطئة ياخذ ريال، وفي نهاية الشهر جمع الابن 47 ريال، ما نسبة الاسئلة التي جاوبها الابن اجابة صحيحة تقريبا؟", options: ["37%", "41%", "43%", "57%"], correct: 3 },
         { q: "يسال أب ابنه كل يوم سؤال، اذا كانت الاجابة صحيحة ياخذ ريالين واذا كانت الاجابة خاطئة ياخذ ريال، وفي نهاية الشهر جمع الابن 43 ريال، ما نسبة الاسئلة التي جاوبها الابن اجابة صحيحة؟", options: ["37%", "41%", "43%", "45%"], correct: 2 },
-        { q: "إذا كان س³ ل < 0 ، س ل² > 0 ، أي الآتي صحيح؟", options: ["س < 0 ، ل < 0", "س > 0 ، ل < 0", "س < 0 ، ل > 0", "س > 0 ، ل > 0"], correct: 1 },
+        { q: "إذا كان س³ ل < 0 ، س ل² > 0 ، أي الآتي صحيح؟", options: ["س < 0 ، ل < 0", "س > 0 ، ل < 0", "س < 0 ، ل > 0", "س > 0 ، ل > 0"], correct: 2 },
         { q: "احمد يعمل يوميا اونلاين في منزله، ولكن بعد كل 4 ايام يعمل يوما حضوريا، بعد كم يوم يتكرر نفس اليوم الذي بدأ فيه الدوام الحضوري اول مرة؟", options: ["20", "30", "35", "48"], correct: 2 },
         { q: "أوجد الحد التالي: 112، 334، 556، 778، .....", options: ["99", "9000", "9009", "9910"], correct: 3 },
-        { q: "20 معلم و 20 مهندس و 18 طبيب و 17 طالب صرفوا 13200 ريال. إذا كان: 5 معلمين صرفوا مثل 4 مهندسين، 12 مهندس مثل 9 أطباء، 6 أطباء مثل 8 طلاب. كم متوسط صرف كل مهندس؟", options: ["180", "175", "210", "240"], correct: 3 },
+        { q: "20 معلم و 20 مهندس و 18 طبيب و 17 طالب صرفوا 13200 ريال. إذا كان: 5 معلمين صرفوا مثل 4 مهندسين، 12 مهندس مثل 9 أطباء، 6 أطباء مثل 8 طلاب. كم متوسط صرف كل مهندس؟", options: ["180", "175", "210", "240"], correct: 1 },
         { q: "(م، ن، ج، ل، f) نقاط في المستوى الإحداثي، إذا كانت ل تقع شرق م وغرب ن، و ج تقع جنوب شرق ن، و م تقع جنوب شرق f، فأي الآتي يقع في أقصى الغرب؟", options: ["f", "ج", "ن", "ل"], correct: 0 },
-        { q: "تتابع مريم متوسط درجاتها. إذا اختبرت 3 اختبارات وحصلت على درجة في الاختبار التالي سيزيد متوسطها 1، وإذا حصلت على 1 في 3 اختبارات تالية سينخفض 1. ما متوسطها حالياً؟", options: ["4", "5", "6", "7"], correct: 1 },
+        { q: "تتابع مريم متوسط درجاتها. إذا اختبرت 3 اختبارات وحصلت على درجة في الاختبار التالي سيزيد متوسطها 1، وإذا حصلت على 1 في 3 اختبارات تالية سينخفض 1. ما متوسطها حالياً؟", options: ["4", "5", "6", "7"], correct: 3 },
         { q: "عدد مكون من خانتين س ص، إذا كان تقريب العدد إلى أقرب 10 يساوي 100، فأي الآتي صحيح؟", options: ["س + ص = 9", "س - ص = 0", "ص - س = 4", "ص - س = 0"], correct: 2 },
-        { q: "نملة في حفرة عمقها 10 متر، كل يوم تصعد 4م وتنزلق 2م، بعد كم يوماً تخرج؟", options: ["8", "9", "10", "11"], correct: 0 },
+        { q: "نملة في حفرة عمقها 10 متر، كل يوم تصعد 4م وتنزلق 2م، بعد كم يوماً تخرج؟", options: ["8", "9", "10", "11"], correct: 1 },
         { q: "ما قيمة: (1 + 2 + 3 + ..... + 51) - (2 + 4 + 6 + ..... + 30)؟", options: ["1226", "1236", "1068", "1086"], correct: 3 },
         { q: "كم عدد يمكن تكوينه من الأرقام (1 ، 2 ، 3 ، 5) بدون تكرار؟", options: ["23", "32", "54", "64"], correct: 3 },
         { q: "رجل في قطار سرعته 50 كم/س لاحظ قطار بضائع عكس الاتجاه مر كاملاً في 9 ثواني، طول القطار 280 م، ما سرعة قطار البضائع؟", options: ["50", "52", "62", "112"], correct: 2 },
         { q: "المتقدمين للتطعيم 5400، أخذ التطعيم 20%. كم نسبة من يأخذ التطعيم ممن لم يأخذوا ليكون نصف عدد المتقدمين قد أخذ التطعيم؟", options: ["25%", "33%", "37.5%", "50%"], correct: 2 },
 
-        // اللفظي (16-30)
+        // القسم اللفظي (16-30) - حسب إجاباتك السابقة
         { q: "التناظر اللفظي - مطر:نبات", options: ["عقل:علم", "جهل فشل", "مدرسة:اجتهاد", "شهادة:نجاح"], correct: 0 },
         { q: "التناظر اللفظي - عبارة:معنى", options: ["طهارة:صلاة", "سفرة:طاولة", "طاعة:ثواب"], correct: 2 },
         { q: "التناظر اللفظي - ورق : حلي", options: ["ماء : ارتواء", "قمح : خبز", "زهر : رحيق", "عسل : نحل"], correct: 1 },
@@ -250,8 +260,18 @@
     function changeFontSize(delta) {
         currentFontSize += delta;
         if(currentFontSize < 12) currentFontSize = 12;
-        if(currentFontSize > 32) currentFontSize = 32;
-        document.getElementById('q-text').style.fontSize = currentFontSize + 'px';
+        if(currentFontSize > 36) currentFontSize = 36;
+        applyFontSize();
+    }
+
+    function resetFontSize() {
+        currentFontSize = 18;
+        applyFontSize();
+    }
+
+    function applyFontSize() {
+        const qt = document.getElementById('q-text');
+        if(qt) qt.style.fontSize = currentFontSize + 'px';
         const options = document.querySelectorAll('.option');
         options.forEach(opt => opt.style.fontSize = (currentFontSize - 2) + 'px');
     }
@@ -280,19 +300,19 @@
     function renderQuestion() {
         const q = questions[currentIdx];
         document.getElementById('section-title').innerText = currentIdx < 15 ? "القسم الكمي" : "القسم اللفظي";
-        document.getElementById('q-text').innerText = `س${currentIdx + 1}: ${q.q}`;
-        document.getElementById('q-text').style.fontSize = currentFontSize + 'px';
+        const qt = document.getElementById('q-text');
+        qt.innerText = `س${currentIdx + 1}: ${q.q}`;
         
         const container = document.getElementById('options-container');
         container.innerHTML = '';
         q.options.forEach((opt, i) => {
             const div = document.createElement('div');
             div.className = `option ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
-            div.style.fontSize = (currentFontSize - 2) + 'px';
             div.innerHTML = `<span style="background:var(--primary-color); color:white; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; margin-left:10px; font-size:12px;">${prefixes[i]}</span> <span>${opt}</span>`;
             div.onclick = () => { userAnswers[currentIdx] = i; renderQuestion(); updateStats(); };
             container.appendChild(div);
         });
+        applyFontSize();
         updateGrid();
     }
 
@@ -315,14 +335,14 @@
 
     function nextQuestion() {
         if (currentIdx < 29) { currentIdx++; renderQuestion(); }
-        else { if(confirm("تسليم الاختبار؟")) finishQuiz(); }
+        else { if(confirm("هل انتهيت من الحل وتريد تسليم الاختبار؟")) finishQuiz(); }
     }
 
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; renderQuestion(); } }
 
     function finishQuiz() {
         clearInterval(timerInterval);
-        document.getElementById('main-content').innerHTML = "<div class='question-card' style='text-align:center;'><h2>جاري الحفظ...</h2></div>";
+        document.getElementById('main-content').innerHTML = "<div class='question-card' style='text-align:center;'><h2>جاري معالجة نتيجتك...</h2></div>";
         let correctCount = 0;
         let details = "";
         questions.forEach((q, i) => {
@@ -340,10 +360,10 @@
             document.getElementById('main-content').innerHTML = `
                 <div class='question-card' style='text-align:center;'>
                     <h2 style='color:var(--primary-color)'>تم التسليم بنجاح!</h2>
-                    <p>أحسنت يا <b>${userName}</b>، تم إرسال نتيجتك.</p>
-                    <div style='background:#f1f1f1; padding:15px; border-radius:10px; margin-top:15px;'>
-                        <p>درجتك: ${correctCount} من 30</p>
-                        <p style='font-size:1.4em; font-weight:bold;'>النسبة: %${scorePercent}</p>
+                    <p>أحسنت يا <b>${userName}</b>، تم إرسال نتيجتك للمعلم.</p>
+                    <div style='background:#f1f1f1; padding:20px; border-radius:10px; margin-top:15px;'>
+                        <p style='font-size:1.1em;'>درجتك هي: ${correctCount} من 30</p>
+                        <p style='font-size:1.6em; font-weight:bold; color:var(--primary-color);'>النسبة المئوية: %${scorePercent}</p>
                     </div>
                 </div>`;
         });
