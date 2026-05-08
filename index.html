@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -20,9 +19,7 @@
     --dark:#2c3e50;
 }
 
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body::before{
     content:"";
@@ -52,28 +49,11 @@ header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
 
-.main-container{
-    display:flex;
-    flex:1;
-    overflow:hidden;
-}
-
-.sidebar{
-    width:270px;
-    background:#eef3f7;
-    border-left:1px solid #d9e2ea;
-    padding:20px;
-    overflow:auto;
-}
-
-.content{
-    flex:1;
-    padding:25px;
-    overflow:auto;
-}
+.main-container{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:270px;background:#eef3f7;padding:20px;overflow:auto;}
+.content{flex:1;padding:25px;overflow:auto;}
 
 .question-card{
     max-width:850px;
@@ -81,184 +61,56 @@ header{
     background:white;
     border-radius:18px;
     padding:30px;
-    box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
-.timer-box{
-    text-align:center;
-    border:2px solid var(--primary);
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:20px;
-    background:white;
-}
+.timer-box{text-align:center;border:2px solid var(--primary);padding:15px;margin-bottom:20px;}
+.timer-value{font-size:32px;color:var(--danger);font-family:monospace;}
 
-.timer-value{
-    font-size:32px;
-    color:var(--danger);
-    font-weight:bold;
-    font-family:monospace;
-}
+.questions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.q-num{height:45px;border:1px solid #ccc;display:flex;justify-content:center;align-items:center;cursor:pointer;}
+.q-num.active{background:#fff4dd;}
+.q-num.answered{background:var(--success);color:white;}
 
-.questions-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-}
+.option{border:1px solid #ddd;padding:15px;margin-bottom:12px;cursor:pointer;}
+.option.selected{border:2px solid var(--primary);background:#eefcfc;}
 
-.q-num{
-    height:45px;
-    border-radius:8px;
-    background:white;
-    border:1px solid #ccc;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    font-weight:bold;
-    transition:.3s;
-}
-
-.q-num.active{
-    background:#fff4dd;
-    border:2px solid var(--warning);
-}
-
-.q-num.answered{
-    background:var(--success);
-    color:white;
-    border:none;
-}
-
-.option{
-    border:1px solid #ddd;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:12px;
-    cursor:pointer;
-    transition:.3s;
-    display:flex;
-    align-items:center;
-    background:white;
-}
-
-.option:hover{
-    transform:translateY(-2px);
-}
-
-.option.selected{
-    border:2px solid var(--primary);
-    background:#eefcfc;
-}
-
-.option-prefix{
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    background:var(--primary);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-left:10px;
-}
-
-.btn{
-    border:none;
-    border-radius:10px;
-    padding:12px 25px;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:bold;
-}
-
-.btn-primary{
-    background:var(--primary);
-    color:white;
-}
-
-.btn-danger{
-    background:var(--danger);
-    color:white;
-}
-
-.btn-gray{
-    background:#ddd;
-}
+.btn{border:none;padding:12px 25px;cursor:pointer;font-weight:bold;}
+.btn-primary{background:var(--primary);color:white;}
+.btn-danger{background:var(--danger);color:white;}
+.btn-gray{background:#ddd;}
 
 #name-screen{
-    position:fixed;
-    inset:0;
-    background:white;
-    z-index:9999;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
+    position:fixed;inset:0;background:white;z-index:9999;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
 }
 
 #name-input{
-    width:100%;
-    max-width:320px;
-    padding:15px;
-    border-radius:12px;
-    border:2px solid var(--primary);
-    font-size:18px;
-    margin:20px 0;
-    text-align:center;
+    padding:15px;border:2px solid var(--primary);
+    font-size:18px;margin:20px 0;text-align:center;
 }
 
-.result-box{
-    text-align:center;
-}
-
-.result-score{
-    font-size:55px;
-    color:var(--primary);
-    font-weight:bold;
-}
+.result-box{text-align:center;}
+.result-score{font-size:55px;color:var(--primary);font-weight:bold;}
 
 footer{
     background:var(--primary);
     color:white;
     text-align:center;
     padding:15px;
-    font-size:15px;
-    font-weight:bold;
-    box-shadow:0 -2px 8px rgba(0,0,0,.1);
-}
-
-@media(max-width:768px){
-    .main-container{
-        flex-direction:column-reverse;
-    }
-
-    .sidebar{
-        width:100%;
-        border-left:none;
-        border-top:1px solid #ddd;
-    }
 }
 </style>
 </head>
+
 <body>
 
 <div id="name-screen">
-    <img src="https://i.ibb.co/qYjkGjbD/6cc50c2f-b3ae-4567-9938-c6babc3abd37.jpg"
-    style="width:150px;border-radius:20px;margin-bottom:20px;">
-
-    <h2 style="color:var(--primary)">محاكي اختبار النمر</h2>
-
+    <h2>محاكي اختبار النمر</h2>
     <input type="text" id="name-input" placeholder="اكتب اسمك الثلاثي">
-
-    <button class="btn btn-primary" onclick="startQuiz()">
-        بدء الاختبار
-    </button>
+    <button class="btn btn-primary" onclick="startQuiz()">بدء الاختبار</button>
 </div>
 
 <header>
-    <div id="answered-count">الأسئلة المجابة: 0 / 15</div>
+    <div id="answered-count">الأسئلة المجابة: 0 / 3</div>
     <div>اختبار النمر</div>
     <div id="user-display">مرحباً</div>
 </header>
@@ -269,26 +121,16 @@ footer{
 
 <div class="question-card">
 
-<div id="question-text"
-style="font-size:24px;font-weight:bold;margin-bottom:25px;">
-</div>
+<div id="question-text"></div>
 
 <div id="options-container"></div>
 
-<div style="display:flex;justify-content:space-between;gap:10px;margin-top:30px;flex-wrap:wrap;">
-
-<button class="btn btn-gray" onclick="prevQuestion()">
-السابق
-</button>
+<div style="display:flex;justify-content:space-between;margin-top:30px;">
+<button class="btn btn-gray" onclick="prevQuestion()">السابق</button>
 
 <div>
-<button class="btn btn-danger" onclick="finishQuiz()">
-إنهاء الاختبار
-</button>
-
-<button class="btn btn-primary" onclick="nextQuestion()">
-حفظ والتالي
-</button>
+<button class="btn btn-danger" onclick="finishQuiz()">إنهاء</button>
+<button class="btn btn-primary" onclick="nextQuestion()">التالي</button>
 </div>
 
 </div>
@@ -297,207 +139,133 @@ style="font-size:24px;font-weight:bold;margin-bottom:25px;">
 
 </div>
 
-<div class="sidebar" id="sidebar">
-
+<div class="sidebar">
 <div class="timer-box">
 <div>الوقت المتبقي</div>
-<div class="timer-value" id="timer">15:00</div>
+<div class="timer-value" id="timer">30:00</div>
 </div>
-
-<h3>خريطة الأسئلة</h3>
 
 <div class="questions-grid" id="questions-grid"></div>
-
 </div>
 
 </div>
 
-<footer>
-صلي علي النبي ﷺ
-</footer>
+<footer>صلي علي النبي ﷺ</footer>
 
 <script>
 
-const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-const SERVICE_ID = "YOUR_SERVICE_ID";
-const TEMPLATE_ID = "YOUR_TEMPLATE_ID";
-
-emailjs.init(PUBLIC_KEY);
-
-const prefixes = ['أ','ب','ج','د'];
-
 const questions = [
-{
-q:'زفير : شهيق',
-options:['غطس : طفو','طرق : سيارة','قراءة : كتابة','حليب : لبن'],
-correct:0
-},
-{
-q:'رف : دولاب',
-options:['جبهة : رأس','رمش : حاجب','كتاب : مطبعة','كهرباء : مولد'],
-correct:0
-},
-{
-q:'جمر : رماد',
-options:['إنسان : موت','شمس : غروب','شيخ : طفل','عجين : خبز'],
-correct:0
-}
+{q:'زفير : شهيق',options:['غطس','طرق','قراءة','حليب'],correct:0},
+{q:'رف : دولاب',options:['جبهة','رمش','كتاب','كهرباء'],correct:0},
+{q:'جمر : رماد',options:['إنسان','شمس','شيخ','عجين'],correct:0}
 ];
 
-questions.sort(() => Math.random() - 0.5);
-
-let currentQuestion = 0;
-let answers = JSON.parse(localStorage.getItem('answers')) || new Array(questions.length).fill(null);
-let userName = localStorage.getItem('userName') || '';
+let currentQuestion=0;
+let answers=new Array(questions.length).fill(null);
+let userName="";
 let timerInterval;
 
 function startQuiz(){
 
-const input = document.getElementById('name-input');
-
-if(input.value.trim().length < 3){
-alert('يرجى إدخال الاسم الثلاثي');
+const input=document.getElementById('name-input');
+if(input.value.trim().length<3){
+alert("اكتب اسم صحيح");
 return;
 }
 
-userName = input.value.trim();
+userName=input.value.trim();
+document.getElementById('user-display').innerText=userName;
 
-localStorage.setItem('userName', userName);
-
-let endTime = localStorage.getItem('endTime');
-
-if(!endTime){
-endTime = Date.now() + (15 * 60 * 1000);
-localStorage.setItem('endTime', endTime);
-}
-
-startTimer(parseInt(endTime));
-
+let endTime=Date.now()+(30*60*1000);
+startTimer(endTime);
 
 document.getElementById('name-screen').style.display='none';
-
-document.getElementById('user-display').innerText = userName;
 
 renderQuestion();
 updateStats();
 }
 
 function startTimer(endTime){
-
 clearInterval(timerInterval);
 
-timerInterval = setInterval(() => {
-
-const remaining = endTime - Date.now();
-
-if(remaining <= 0){
+timerInterval=setInterval(()=>{
+let remaining=endTime-Date.now();
+if(remaining<=0){
 clearInterval(timerInterval);
 finishQuiz();
 return;
 }
 
-const m = Math.floor(remaining / 60000);
-const s = Math.floor((remaining % 60000)/1000);
+let m=Math.floor(remaining/60000);
+let s=Math.floor((remaining%60000)/1000);
 
-
-document.getElementById('timer').innerText =
-`${m}:${s < 10 ? '0'+s : s}`;
+document.getElementById('timer').innerText=
+`${m}:${s<10?'0'+s:s}`;
 
 },1000);
 }
 
 function renderQuestion(){
 
-const q = questions[currentQuestion];
+let q=questions[currentQuestion];
 
+document.getElementById('question-text').innerText=
+`سؤال ${currentQuestion+1}: ${q.q}`;
 
-document.getElementById('question-text').innerText =
-`السؤال ${currentQuestion + 1}: ${q.q}`;
+let container=document.getElementById('options-container');
+container.innerHTML="";
 
-const container = document.getElementById('options-container');
+q.options.forEach((opt,i)=>{
+let div=document.createElement('div');
+div.className="option"+(answers[currentQuestion]===i?" selected":"");
 
-container.innerHTML='';
+div.innerText=opt;
 
-q.options.forEach((opt,index)=>{
-
-const div = document.createElement('div');
-
-
-div.className = `option ${answers[currentQuestion] === index ? 'selected':''}`;
-
-
-div.innerHTML = `
-<div class="option-prefix">${prefixes[index]}</div>
-<div>${opt}</div>
-`;
-
-
-div.onclick = () => {
-answers[currentQuestion] = index;
-localStorage.setItem('answers', JSON.stringify(answers));
+div.onclick=()=>{
+answers[currentQuestion]=i;
 renderQuestion();
 updateStats();
-}
+};
 
 container.appendChild(div);
-
 });
 
 updateGrid();
 }
 
 function updateGrid(){
+let grid=document.getElementById('questions-grid');
+grid.innerHTML="";
 
-const grid = document.getElementById('questions-grid');
-grid.innerHTML='';
+questions.forEach((q,i)=>{
+let div=document.createElement('div');
+div.className="q-num"+(answers[i]!=null?" answered":"")+(currentQuestion===i?" active":"");
+div.innerText=i+1;
 
-questions.forEach((q,index)=>{
-
-const div = document.createElement('div');
-
-
-div.className = `q-num
-${answers[index] !== null ? 'answered':''}
-${currentQuestion === index ? 'active':''}`;
-
-
-div.innerText = index + 1;
-
-
-div.onclick = ()=>{
-currentQuestion = index;
+div.onclick=()=>{
+currentQuestion=i;
 renderQuestion();
-}
-
+};
 
 grid.appendChild(div);
-
 });
 }
 
 function updateStats(){
-
-const count = answers.filter(a => a !== null).length;
-
-
-document.getElementById('answered-count').innerText =
+let count=answers.filter(a=>a!=null).length;
+document.getElementById('answered-count').innerText=
 `الأسئلة المجابة: ${count} / ${questions.length}`;
 }
 
 function nextQuestion(){
-
-if(currentQuestion < questions.length - 1){
+if(currentQuestion<questions.length-1){
 currentQuestion++;
 renderQuestion();
-}else{
-if(confirm('هل تريد إنهاء الاختبار؟')){
-finishQuiz();
-}
-}
+}else finishQuiz();
 }
 
 function prevQuestion(){
-if(currentQuestion > 0){
+if(currentQuestion>0){
 currentQuestion--;
 renderQuestion();
 }
@@ -507,97 +275,20 @@ function finishQuiz(){
 
 clearInterval(timerInterval);
 
-let correct = 0;
-let details = '';
+let correct=0;
 
-questions.forEach((q,index)=>{
-
-const isCorrect = answers[index] === q.correct;
-
-if(isCorrect) correct++;
-
-const answerText = answers[index] !== null
-? prefixes[answers[index]]
-: 'لم يحل';
-
-
-details += `س${index+1}: ${answerText} | ${isCorrect ? '✅':'❌'}\n`;
-
+questions.forEach((q,i)=>{
+if(answers[i]===q.correct)correct++;
 });
 
-const percentage = Math.round((correct / questions.length) * 100);
+let percentage=Math.round((correct/questions.length)*100);
 
-
-document.getElementById('main-content').innerHTML = `
+document.getElementById('main-content').innerHTML=`
 <div class="question-card result-box">
-<h2>جاري إرسال النتيجة...</h2>
+<h2>نتيجتك النهائية</h2>
+<div class="result-score">${percentage}%</div>
+<p>شكراً لك يا ${userName}</p>
 </div>`;
-
-emailjs.send(SERVICE_ID,TEMPLATE_ID,{
-user_name:userName,
-user_score: percentage + '%',
-user_details:details
-})
-.then(()=>{
-
-localStorage.removeItem('answers');
-localStorage.removeItem('endTime');
-
-
-document.getElementById('sidebar').style.display='none';
-
-
-document.getElementById('main-content').innerHTML = `
-<div class="question-card result-box">
-
-<h2 style="color:var(--primary)">
-تم تسليم الاختبار بنجاح
-</h2>
-
-<div class="result-score">
-${percentage}%
-</div>
-
-<p>\nنتيجتك النهائية في الاختبار\n</p>
-
-<p>
-شكراً لك يا ${userName}
-</p>
-
-</div>`;
-
-})
-.catch((err)=>{
-
-console.error(err);
-
-
-document.getElementById('main-content').innerHTML = `
-<div class="question-card result-box">
-
-<h2 style="color:var(--primary)">
-شكراً لإتمام الاختبار 🌟
-</h2>
-
-<p>
-تم استلام إجاباتك بنجاح، نتمنى لك كل التوفيق والنجاح
-</p>
-
-</div>`;
-
-});
-}
-
-window.onload = ()=>{
-
-const savedName = localStorage.getItem('userName');
-
-if(savedName){
-
-document.getElementById('name-input').value = savedName;
-
-}
-
 }
 
 </script>
