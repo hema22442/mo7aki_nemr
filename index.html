@@ -28,27 +28,32 @@
         .main-container { display: flex; flex: 1; overflow: hidden; }
         
         /* السايد بار */
-        .sidebar { width: 240px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        .sidebar { width: 240px; background-color: var(--bg-sidebar); border-left: 1px solid #d1d9e0; padding: 10px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
         
-        /* قسم التايمر والخط */
-        .timer-font-section { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .timer-value { font-size: 24px; font-weight: bold; color: #333; }
-        
-        .font-controls { display: flex; gap: 5px; justify-content: center; width: 100%; border-top: 1px solid #eee; pt: 8px; padding-top: 8px; }
-        .font-btn { background-color: #00bcd4; color: white; border: none; padding: 4px 10px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold; flex: 1; }
-        .font-btn:hover { background-color: #0097a7; }
+        .timer-section { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 15px; text-align: center; }
+        .timer-value { font-size: 26px; font-weight: bold; color: #333; }
 
         .info-box { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 8px; text-align: center; font-size: 12px; }
+        
+        /* شبكة الأسئلة */
         .questions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
         .q-num { width: 100%; height: 35px; background: white; border: 1px solid #ccd6dd; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; font-weight: bold; }
         .q-num.active { border: 2px solid orange; }
         .q-num.answered { background-color: #00a651; color: white; border: none; }
         
+        /* قسم أزرار الخط - تم نقله أسفل الأرقام */
+        .font-controls-box { background: #fff; border: 1px solid #ccd6dd; border-radius: 4px; padding: 10px; margin-top: auto; }
+        .font-label { font-size: 12px; text-align: center; margin-bottom: 8px; color: #666; font-weight: bold; }
+        .font-btns-wrapper { display: flex; gap: 5px; justify-content: center; }
+        .font-btn { background-color: #00bcd4; color: white; border: none; padding: 6px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold; flex: 1; }
+        .font-btn:hover { background-color: #0097a7; }
+
         .content { flex: 1; padding: 15px; background: rgba(255, 255, 255, 0.7); display: flex; flex-direction: column; overflow-y: auto; }
         .question-area { font-size: 18px; line-height: 1.6; }
         
         .option { padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; font-size: 16px; transition: 0.2s; background: rgba(255, 255, 255, 0.9); }
         .option.selected { border: 2px solid var(--primary-color); background-color: #e6f2f2; }
+        
         .footer-controls { border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
         .btn { padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
         .btn-save { background-color: var(--primary-color); color: white; }
@@ -60,8 +65,9 @@
         @media (max-width: 768px) {
             header { flex-direction: column; font-size: 12px; }
             .main-container { flex-direction: column-reverse; }
-            .sidebar { width: auto; height: auto; }
+            .sidebar { width: auto; height: auto; border-left: none; border-top: 1px solid #ddd; }
             .questions-grid { grid-template-columns: repeat(8, 1fr); }
+            .font-controls-box { margin-top: 10px; }
         }
     </style>
 </head>
@@ -77,7 +83,7 @@
 
 <header>
     <div>الأسئلة المرحلة : 0</div>
-    <div></div>
+    <div>عنوان الاختبار : 148 . الصفدي ووصف الجندي</div>
     <div>مجموع الأسئلة : 15</div>
 </header>
 
@@ -96,17 +102,22 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <div class="timer-font-section">
+        <div class="timer-section">
             <div class="timer-value" id="timer-box">15:00</div>
-            <div class="font-controls">
+        </div>
+
+        <div class="info-box">تم الإجابة <span id="answered-count" style="color: green; font-weight: bold;">0</span> / 15</div>
+        
+        <div class="questions-grid" id="q-grid"></div>
+
+        <div class="font-controls-box">
+            <div class="font-label">تحكم في حجم الخط</div>
+            <div class="font-btns-wrapper">
                 <button class="font-btn" onclick="changeFontSize(2)">+A</button>
                 <button class="font-btn" onclick="changeFontSize(0)">A</button>
                 <button class="font-btn" onclick="changeFontSize(-2)">-A</button>
             </div>
         </div>
-
-        <div class="info-box">تم الإجابة <span id="answered-count" style="color: green; font-weight: bold;">0</span> / 15</div>
-        <div class="questions-grid" id="q-grid"></div>
     </div>
 </div>
 
@@ -231,9 +242,8 @@
     function changeFontSize(val) {
         if (val === 0) currentFontSize = 18;
         else currentFontSize += val;
-        // تقييد حجم الخط لضمان عدم اختفاء النص
         if (currentFontSize < 12) currentFontSize = 12;
-        if (currentFontSize > 30) currentFontSize = 30;
+        if (currentFontSize > 32) currentFontSize = 32;
         document.getElementById('q-area').style.fontSize = currentFontSize + "px";
     }
 
