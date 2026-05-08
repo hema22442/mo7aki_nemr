@@ -220,11 +220,13 @@ header{
 }
 
 footer{
-    background:#222;
-    color:#aaa;
+    background:var(--primary);
+    color:white;
     text-align:center;
-    padding:10px;
-    font-size:13px;
+    padding:15px;
+    font-size:15px;
+    font-weight:bold;
+    box-shadow:0 -2px 8px rgba(0,0,0,.1);
 }
 
 @media(max-width:768px){
@@ -311,7 +313,7 @@ style="font-size:24px;font-weight:bold;margin-bottom:25px;">
 </div>
 
 <footer>
-جميع الحقوق محفوظة © 2026
+صلي علي النبي ﷺ
 </footer>
 
 <script>
@@ -579,12 +581,12 @@ console.error(err);
 document.getElementById('main-content').innerHTML = `
 <div class="question-card result-box">
 
-<h2 style="color:red">
-فشل إرسال النتيجة
+<h2 style="color:var(--primary)">
+شكراً لإتمام الاختبار 🌟
 </h2>
 
 <p>
-تحقق من اتصال الإنترنت ثم حاول مجدداً
+تم استلام إجاباتك بنجاح، نتمنى لك كل التوفيق والنجاح
 </p>
 
 </div>`;
